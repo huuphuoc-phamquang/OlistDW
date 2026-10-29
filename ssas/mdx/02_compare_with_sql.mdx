@@ -1,0 +1,9 @@
+-- Doi chieu voi sql/03_compare_with_cube.sql. Chay tung cau mot.
+-- Tong (chay trong SSMS > Analysis Services > database SSAS > New MDX Query)
+SELECT { [Measures].[Price], [Measures].[Freight Value], [Measures].[Fact Order Items Count] } ON COLUMNS
+FROM [Olist DW];
+
+-- Top 5 category theo doanh thu
+SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
+  TOPCOUNT([Dim Product].[Product Category Name].[Product Category Name].MEMBERS, 5, [Measures].[Price]) ON ROWS
+FROM [Olist DW];

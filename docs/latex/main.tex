@@ -1,0 +1,64 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{vietnam}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{float}  % tuy chon [H]: ghim figure dung vi tri trong nguon,
+                    % khong cho LaTeX day anh troi xuong duoi cac muc ke tiep
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=opennebulacolor, linkcolor=black, citecolor=black}
+\setlength{\emergencystretch}{3em}
+
+\usepackage{amsmath}
+\usepackage{mathptmx}
+
+% Toan bo tai lieu dung MOT font Times: tro ho chu may chu ve ho roman,
+% nen \texttt{...} in ra bang chinh font than bai.
+\renewcommand{\ttdefault}{\rmdefault}
+% Ten cot/bang rat dai (vd order_delivered_carrier_date) khong co diem ngat
+% nao nen tran le. Cho phep xuong dong ngay sau moi dau gach duoi, khong
+% them dau gach noi -- dung quy uoc thuong dung cho dinh danh va URL.
+\makeatletter
+\let\vn@underscore\_
+\renewcommand{\_}{\vn@underscore\allowbreak}
+\makeatother
+
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+% Mac dinh LaTeX KHONG thut dong dau tien sau moi tieu de muc.
+% indentfirst bat thut vao cho ca doan dau, dung thong le trinh bay tieng Viet.
+\usepackage{indentfirst}
+
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{caption}
+\captionsetup{justification=centering,singlelinecheck=false}
+
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+\definecolor{opennebulacolor}{RGB}{20, 90, 120}
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {2.5ex \@plus 1ex \@minus .2ex}%   truoc tieu de
+  {1ex \@plus .2ex}%                 duong (>0) = xuong dong sau tieu de
+  {\normalfont\normalsize\bfseries}}
+\makeatother
+\newcommand{\subsubsubsection}[1]{\paragraph{#1}}
+\begin{document}
+\pagestyle{empty}
+
+\input{noi_dung/00_bia}
+\input{noi_dung/01_nhan_xet}
+\input{noi_dung/02_loi_cam_on}
+\input{noi_dung/03_muc_luc}
+\input{noi_dung/04_chuong1}
+\input{noi_dung/05_chuong2}
+
+\end{document}

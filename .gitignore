@@ -1,0 +1,21 @@
+# Dữ liệu (347 MB): olist.sqlite 118 MB vượt giới hạn 100 MB của GitHub.
+# Tải lại từ Kaggle, phần processed sinh ra bằng notebooks/olist_preprocessing.ipynb
+data/
+
+# Sản phẩm biên dịch LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Build output của Visual Studio / SSAS / SSIS
+bin/
+obj/
+.vs/
+*.dwproj.user
+*.dtproj.user

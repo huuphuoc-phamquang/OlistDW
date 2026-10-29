@@ -1,0 +1,104 @@
+-- Cube: [Olist DW]   Measures: [Price], [Freight Value], [Fact Order Items Count]
+-- Hierarchy: [Dim Location].[Location Hierarchy] (State > City), [Dim Product].[Product Hierarchy] (Category > Product Id)
+-- Chay MOI LAN MOT cau (SSMS: boi den tung cau roi F5). Cac cau ngan cach nhau boi dong "-- Qn".
+
+-- Q1 [ROLL-UP] Doanh thu theo bang (cap State)
+SELECT { [Measures].[Price], [Measures].[Freight Value], [Measures].[Fact Order Items Count] } ON COLUMNS,
+       NON EMPTY [Dim Location].[Location Hierarchy].[Geolocation State].MEMBERS ON ROWS
+FROM [Olist DW]
+
+-- Q2 [ROLL-UP] Doanh thu theo nhom san pham (cap Category, tu Product len Category)
+SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
+       NON EMPTY ORDER([Dim Product].[Product Hierarchy].[Product Category Name].MEMBERS, [Measures].[Price], BDESC) ON ROWS
+FROM [Olist DW]
+
+-- Q3 [ROLL-UP] Gop tu thanh pho len bang roi len toan quoc bang .PARENT
+SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
+       { [Dim Location].[Location Hierarchy].[Geolocation City].&[SP]&[campinas],
+         [Dim Location].[Location Hierarchy].[Geolocation City].&[SP]&[campinas].PARENT,
+         [Dim Location].[Location Hierarchy].[Geolocation City].&[SP]&[campinas].PARENT.PARENT } ON ROWS
+FROM [Olist DW]
+
+-- Q4 [ROLL-UP] Cong don doanh thu cac bang tu lon den nho (tong luy ke bang SUM tren tap da sap xep)
+WITH SET [S] AS ORDER(NONEMPTY([Dim Location].[Location Hierarchy].[Geolocation State].MEMBERS, [Measures].[Price]), [Measures].[Price], BDESC)
+MEMBER [Measures].[Luy Ke Price] AS SUM(HEAD([S], RANK([Dim Location].[Location Hierarchy].CURRENTMEMBER, [S])), [Measures].[Price])
+SELECT { [Measures].[Price], [Measures].[Luy Ke Price] } ON COLUMNS,
+       TOPCOUNT([S], 8) ON ROWS
+FROM [Olist DW]
+
+-- Q5 [DRILL-DOWN] Tu bang SP, RJ, MG khoet xuong 3 thanh pho doanh thu cao nhat cua moi bang
+SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
+       DRILLDOWNLEVELTOP({ [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
+                           [Dim Location].[Location Hierarchy].[Geolocation State].&[RJ],
+                           [Dim Location].[Location Hierarchy].[Geolocation State].&[MG] }, 3, , [Measures].[Price]) ON ROWS
+FROM [Olist DW]
+
+-- Q6 [DRILL-DOWN] Tu nhom cama_mesa_banho khoet xuong 10 san pham doanh thu cao nhat
+SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
+       TOPCOUNT([Dim Product].[Product Hierarchy].[Product Category Name].&[cama_mesa_banho].CHILDREN, 10, [Measures].[Price]) ON ROWS
+FROM [Olist DW]
+
+-- Q7 [DRILL-DOWN] Top 3 nhom san pham, moi nhom khoet xuong 3 san pham ban chay nhat
+SELECT { [Measures].[Price] } ON COLUMNS,
+       DRILLDOWNLEVELTOP(TOPCOUNT([Dim Product].[Product Hierarchy].[Product Category Name].MEMBERS, 3, [Measures].[Price]), 3, , [Measures].[Price]) ON ROWS
+FROM [Olist DW]
+
+-- Q8 [SLICE] Cat theo bang SP (WHERE): top 10 nhom san pham ban chay o SP
+SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
+       TOPCOUNT([Dim Product].[Product Hierarchy].[Product Category Name].MEMBERS, 10, [Measures].[Price]) ON ROWS
+FROM [Olist DW]
+WHERE ( [Dim Location].[Location Hierarchy].[Geolocation State].&[SP] )
+
+-- Q9 [SLICE] Cat 2 chieu cung luc: bang SP va nhom beleza_saude (ket qua la mot "lat cat" 1 hang)
+SELECT { [Measures].[Price], [Measures].[Freight Value], [Measures].[Fact Order Items Count] } ON COLUMNS
+FROM [Olist DW]
+WHERE ( [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
+        [Dim Product].[Product Hierarchy].[Product Category Name].&[beleza_saude] )
+
+-- Q10 [DICE] Khoi con (sub-cube): 3 bang x 3 nhom san pham, nhom bang subselect
+SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
+       NON EMPTY [Dim Location].[Location Hierarchy].[Geolocation State].MEMBERS ON ROWS
+FROM ( SELECT { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
+                [Dim Location].[Location Hierarchy].[Geolocation State].&[RJ],
+                [Dim Location].[Location Hierarchy].[Geolocation State].&[MG] } ON COLUMNS
+       FROM ( SELECT { [Dim Product].[Product Hierarchy].[Product Category Name].&[beleza_saude],
+                       [Dim Product].[Product Hierarchy].[Product Category Name].&[cama_mesa_banho],
+                       [Dim Product].[Product Hierarchy].[Product Category Name].&[esporte_lazer] } ON COLUMNS
+              FROM [Olist DW] ) )
+
+-- Q11 [DICE] Loc theo dieu kien: thanh pho cua SP co doanh thu > 100000
+SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
+       FILTER([Dim Location].[Location Hierarchy].[Geolocation State].&[SP].CHILDREN, [Measures].[Price] > 100000) ON ROWS
+FROM [Olist DW]
+
+-- Q12 [PIVOT] Hang = nhom san pham (top 5), cot = bang (SP, RJ, MG)
+SELECT { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
+         [Dim Location].[Location Hierarchy].[Geolocation State].&[RJ],
+         [Dim Location].[Location Hierarchy].[Geolocation State].&[MG] } ON COLUMNS,
+       TOPCOUNT([Dim Product].[Product Hierarchy].[Product Category Name].MEMBERS, 5, [Measures].[Price]) ON ROWS
+FROM [Olist DW]
+WHERE ( [Measures].[Price] )
+
+-- Q13 [PIVOT] Xoay truc cua Q12: hang = bang, cot = nhom san pham
+SELECT TOPCOUNT([Dim Product].[Product Hierarchy].[Product Category Name].MEMBERS, 5, [Measures].[Price]) ON COLUMNS,
+       { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
+         [Dim Location].[Location Hierarchy].[Geolocation State].&[RJ],
+         [Dim Location].[Location Hierarchy].[Geolocation State].&[MG] } ON ROWS
+FROM [Olist DW]
+WHERE ( [Measures].[Price] )
+
+-- Q14 [PIVOT] Dua do do (Measures) xuong hang, bang len cot
+SELECT { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
+         [Dim Location].[Location Hierarchy].[Geolocation State].&[RJ],
+         [Dim Location].[Location Hierarchy].[Geolocation State].&[MG] } ON COLUMNS,
+       { [Measures].[Price], [Measures].[Freight Value], [Measures].[Fact Order Items Count] } ON ROWS
+FROM [Olist DW]
+
+-- Q15 [PIVOT] Thanh vien tinh toan: gia trung binh moi dong hang, bang x nhom san pham
+WITH MEMBER [Measures].[Avg Price] AS IIF([Measures].[Fact Order Items Count] = 0, NULL, [Measures].[Price] / [Measures].[Fact Order Items Count]), FORMAT_STRING = '#,##0.00'
+SELECT TOPCOUNT([Dim Product].[Product Hierarchy].[Product Category Name].MEMBERS, 4, [Measures].[Price]) ON COLUMNS,
+       { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
+         [Dim Location].[Location Hierarchy].[Geolocation State].&[RJ],
+         [Dim Location].[Location Hierarchy].[Geolocation State].&[MG] } ON ROWS
+FROM [Olist DW]
+WHERE ( [Measures].[Avg Price] )

@@ -1,0 +1,125 @@
+% \begin{titlepage}
+%     % --- KẺ KHUNG VIỀN MỎNG ---
+%     \begin{tikzpicture}[remember picture, overlay]
+%         \draw[line width=0.75pt] 
+%             ($(current page.north west) + (1.5cm,-1.5cm)$) 
+%             rectangle 
+%             ($(current page.south east) + (-1.5cm,1.5cm)$);
+%     \end{tikzpicture}
+%
+%     \centering
+%
+%     % --- ĐƠN VỊ CÔNG TÁC ---
+%     {\bfseries ĐẠI HỌC QUỐC GIA TP. HỒ CHÍ MINH \par}
+%     \vspace{0.25cm}
+%     {\bfseries TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN \par}
+%     \vspace{0.25cm}
+%     {\bfseries KHOA HỆ THỐNG THÔNG TIN \par}
+%
+%     \vspace{1.5cm}
+%
+%     % --- VỊ TRÍ CHÈN LOGO ---
+%     % Thay "logo" bằng tên file ảnh (ví dụ: logo.png) đặt cùng thư mục
+%     \IfFileExists{Logo_UIT_updated.jpg}{%
+%         \includegraphics[width=4.5cm]{Logo_UIT_updated.jpg}%
+%     }{%
+%         \framebox[4.5cm]{\rule{0pt}{4.5cm}\textit{(logo)}}%
+%     }
+%
+%     \vspace{1.5cm}
+%
+%     % --- TIÊU ĐỀ BÁO CÁO ---
+%     {\Large\bfseries BÁO CÁO ĐỒ ÁN \par}
+%     \vspace{0.4cm}
+%     {\large\bfseries MÔN KHO DỮ LIỆU VÀ OLAP - IS217.R13 \par}
+%     \vspace{0.3cm}
+%     {\large\bfseries\color{opennebulacolor} XÂY DỰNG KHO DỮ LIỆU VÀ PHÂN TÍCH HIỆU QUẢ KINH DOANH TRÊN NỀN TẢNG THƯƠNG MẠI ĐIỆN TỬ \par}
+%
+%     \vspace{2.2cm}
+%
+%     % --- GIẢNG VIÊN HƯỚNG DẪN ---
+%     {\bfseries GIẢNG VIÊN HƯỚNG DẪN \par}
+%     \vspace{0.25cm}
+%     {\bfseries NGUYỄN THỊ KIM PHỤNG \par}
+%
+%     \vspace{2cm}
+%
+%     % --- DANH SÁCH SINH VIÊN ---
+%     {\bfseries NGUYỄN THÚY VY -- 24522071 \par}
+%     \vspace{0.2cm}
+%     {\bfseries PHẠM QUANG HỮU PHƯỚC -- 24521411 \par}
+%     \vspace{0.2cm}
+%
+%     \vfill % Đẩy phần chân trang xuống cuối
+%
+%     % --- ĐỊA ĐIỂM, THỜI GIAN ---
+%     {\bfseries TP. HỒ CHÍ MINH, 9/2026 \par}
+%
+% \end{titlepage}
+
+% --------------------------------------------------
+\begin{titlepage}
+    % Trang bia khong theo dan dong 1.5 va parskip cua phan noi dung,
+    % neu khong se tran sang trang 2.
+    \singlespacing
+    \setlength{\parskip}{0pt}
+    \centering
+
+    % --- KẺ KHUNG VIỀN MỎNG ---
+    \begin{tikzpicture}[remember picture, overlay]
+        \draw[line width=0.75pt]
+            ($(current page.north west) + (1.5cm,-1.5cm)$)
+            rectangle
+            ($(current page.south east) + (-1.5cm,1.5cm)$);
+    \end{tikzpicture}
+
+    % --- ĐƠN VỊ CÔNG TÁC ---
+    {\bfseries ĐẠI HỌC QUỐC GIA TP. HỒ CHÍ MINH \par}
+    \vspace{0.3cm}
+    {\bfseries TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN \par}
+    \vspace{0.3cm}
+    {\bfseries KHOA HỆ THỐNG THÔNG TIN \par}
+
+    \vfill
+
+    % --- LOGO ---
+    \IfFileExists{Logo_UIT_updated.jpg}{%
+        \includegraphics[width=4cm]{Logo_UIT_updated.jpg}%
+    }{%
+        \fbox{\parbox[c][4cm][c]{4cm}{\centering\itshape (logo)}}%
+    }
+
+    \vfill
+
+    % --- TIÊU ĐỀ BÁO CÁO ---
+    {\Large\bfseries BÁO CÁO ĐỒ ÁN \par}
+    \vspace{0.4cm}
+    {\large\bfseries MÔN KHO DỮ LIỆU VÀ OLAP --- IS217.R13 \par}
+    \vspace{0.8cm}
+    {\large\bfseries\color{opennebulacolor}
+        XÂY DỰNG KHO DỮ LIỆU VÀ PHÂN TÍCH HIỆU QUẢ KINH DOANH\
+        TRÊN NỀN TẢNG THƯƠNG MẠI ĐIỆN TỬ \par}
+
+    \vfill
+
+    % --- GIẢNG VIÊN HƯỚNG DẪN ---
+    {\bfseries GIẢNG VIÊN HƯỚNG DẪN \par}
+    \vspace{0.25cm}
+    {NGUYỄN THỊ KIM PHỤNG \par}
+
+    \vspace{1.2cm}
+
+    % --- DANH SÁCH SINH VIÊN ---
+    {\bfseries SINH VIÊN THỰC HIỆN \par}
+    \vspace{0.25cm}
+    {NGUYỄN THÚY VY --- 24522071 \par}
+    \vspace{0.15cm}
+    {PHẠM QUANG HỮU PHƯỚC --- 24521411 \par}
+
+    \vfill
+
+    % --- ĐỊA ĐIỂM, THỜI GIAN ---
+    {\bfseries TP. HỒ CHÍ MINH, 9/2026 \par}
+
+\end{titlepage}
+% --------------------------------------------------
