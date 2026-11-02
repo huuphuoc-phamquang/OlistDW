@@ -29,6 +29,9 @@
 | Dim Product Category | Product Category Name | – | – |
 | Dim Location | Location Id | Geolocation State, Geolocation City, Geolocation Zip Code Prefix | **Location Hierarchy**: Geolocation State → Geolocation City |
 | Dim Review | Review Id | (chưa đưa vào cube) | – |
+| Dim Payment Type | Payment Type | – | – |
+| Dim Lead Origin | Origin | – | – |
+| Dim Contact Date | Contact Month (tên dạng `2018-02`) | Contact Year | **Contact Date Hierarchy**: Contact Year → Contact Month |
 
 Cách tạo hierarchy trong Dimension Designer:
 - Kéo cột `geolocation_state`, `geolocation_city`, `geolocation_zip_code_prefix` từ DSV sang khung *Attributes* của `Dim Location`.
@@ -241,12 +244,29 @@ WHERE ( [Measures].[Avg Price] )
 
 **Ket qua mau:** SP 109,97 | 190,71 | 91,36 | 105,36; RJ 136,56 | 212,10 | 90,05 | 120,22; MG 145,08 | 194,28 | 97,40 | 116,69
 
+### 4.1 Hai measure group bổ sung
+
+| Measure group | Measure | Dimension (quan hệ) |
+|---|---|---|
+| Fact Order Payment | Payment Value, Payment Count | Dim Payment Type (Regular, khóa `payment_type`); Dim Customer (Regular, qua cột tính `customer_id`); Dim Location (Referenced qua Dim Customer) |
+| Fact Seller Lead | Lead Count, Won Leads, Declared Monthly Revenue | Dim Lead Origin (Regular, `origin`); Dim Contact Date (Regular, `contact_ym`); Dim Seller (Regular, qua cột tính `seller_key`) |
+
+Các điểm cần biết:
+- `fact_order_payment` không có khóa khách hàng. Trong Data Source View thêm *Named Calculation* `customer_id` lấy từ `fact_order_items` theo `order_id` (mỗi đơn chỉ có một khách hàng). 830 dòng thanh toán thuộc đơn không có dòng hàng (162.591,95) nên rơi vào thành viên **Unknown** của Dim Customer, không bị mất khỏi tổng.
+- `fact_seller_lead` có thêm các Named Calculation: `won_flag` (1 nếu `is_won`, để cộng được thành Won Leads), `contact_year`, `contact_ym`, `contact_ym_name` (từ `first_contact_date`) và `seller_key` (= `seller_id` nếu seller có trong `dim_seller`, ngược lại NULL). Trong 842 lead thắng chỉ 380 seller đã có đơn hàng; 462 lead thắng và 7.158 lead chưa thắng vào **Unknown** của Dim Seller.
+- Dim Customer, Dim Seller, Dim Location đặt *UnknownMember = Visible*; khóa NULL ở fact đặt *NullProcessing = UnknownMember*.
+- `declared_monthly_revenue` bằng 0 ở các seller có trong `dim_seller`, nên Declared Monthly Revenue chỉ có ý nghĩa theo kênh tiếp thị và thời gian (Q23), không theo seller.
+- Truy vấn: `ssas/mdx/03_olist_mdx_payment_lead.mdx` (Q16 đến Q23).
+
 ## 7. Đối chiếu với SQL
 
 | Kiểm tra | MDX | SQL |
 |---|---|---|
 | Tổng Price / số dòng | 13.591.643,70 / 112.650 | 13.591.643,70 / 112.650 |
 | Bang SP, nhóm beleza_saude (Q9) | 462.305,22 / 4.204 | 462.305,22 / 4.204 |
+| Tổng Payment Value / Payment Count | 16.008.872,12 / 103.886 | 16.008.872,12 / 103.886 |
+| Payment Value credit_card (Q16) | 12.542.084,19 / 76.795 | 12.542.084,19 / 76.795 |
+| Lead Count / Won Leads | 8.000 / 842 | 8.000 / 842 |
 
 ```sql
 SELECT SUM(f.price), COUNT(*)

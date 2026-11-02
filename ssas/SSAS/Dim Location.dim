@@ -45,6 +45,8 @@
   <Source xsi:type="DataSourceViewBinding" dwd:design-time-name="97027419-9f80-4764-be19-71abd2c6f76f">
     <DataSourceViewID>Olist DW</DataSourceViewID>
   </Source>
+  <UnknownMember>Visible</UnknownMember>
+  <UnknownMemberName>Unknown</UnknownMemberName>
   <ErrorConfiguration dwd:design-time-name="a1141dfa-4923-4394-b87f-2ea00e73380f">
     <KeyNotFound>ReportAndStop</KeyNotFound>
     <KeyDuplicate>ReportAndStop</KeyDuplicate>

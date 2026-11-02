@@ -20,7 +20,7 @@ Olist_DW/
 ├── ssas/
 │   ├── Olist_SSAS.slnx          mở bằng Visual Studio
 │   ├── SSAS/                    project cube (Data Source, DSV, 6 dimension, cube Olist DW)
-│   └── mdx/                     01_olist_mdx_queries.mdx (15 truy vấn), 02_compare_with_sql.mdx
+│   └── mdx/                     01 (15 truy vấn, Fact Order Items), 03 (9 truy vấn, Fact Order Payment và Fact Seller Lead), 02_compare_with_sql.mdx
 └── docs/                    lược đồ (drawio/png/svg/pdf), báo cáo LaTeX, huong_dan_ssas_mdx.md
 ```
 
@@ -33,7 +33,7 @@ Olist_DW/
 | 2 | Nạp dữ liệu | Visual Studio: mở `ssis/Olist_SSIS.slnx`, chuột phải `Package.dtsx` → Execute |
 | 3 | Khóa chính và kiểm tra | SSMS: chạy `sql/02_post_load_checks.sql` |
 | 4 | Tạo cube | Visual Studio: mở `ssas/Olist_SSAS.slnx` → Deploy |
-| 5 | Truy vấn | SSMS (Analysis Services): chạy từng câu trong `ssas/mdx/01_olist_mdx_queries.mdx` |
+| 5 | Truy vấn | SSMS (Analysis Services): chạy từng câu trong `ssas/mdx/01_olist_mdx_queries.mdx` và `03_olist_mdx_payment_lead.mdx` |
 | 6 | Đối chiếu | `sql/03_compare_with_cube.sql` và `ssas/mdx/02_compare_with_sql.mdx` |
 
 Kết quả đúng: `fact_order_items` có 112.650 dòng, tổng `price` 13.591.643,70, `freight_value` 2.251.909,54.
@@ -53,4 +53,4 @@ Kết quả đúng: `fact_order_items` có 112.650 dòng, tổng `price` 13.591.
 - Tài khoản chạy SSAS (`NT Service\MSOLAP$<instance>`) cần quyền `db_datareader` trên OlistDW, và Data Source dùng *Use the service account*.
 - Flat File Connection phải đặt `LocaleID = 1033` (English - US) và code page 65001, nếu không giá trị số bị nhân 10/100.
 - Chạy lại package SSIS trên database đã có dữ liệu sẽ lỗi trùng khóa ở các task DIM_*; chạy lại `sql/01_create_tables.sql` trước.
-- Hướng dẫn chi tiết cube, dimension và 15 truy vấn MDX: `docs/huong_dan_ssas_mdx.md`.
+- Hướng dẫn chi tiết cube, dimension và 24 truy vấn MDX: `docs/huong_dan_ssas_mdx.md`.

@@ -21,5 +21,6 @@
         </Partition>
       </Partitions>
     </MeasureGroup>
+<MeasureGroup><ID>Fact Order Payment</ID><Partitions><Partition><ID>Fact Order Payment</ID><Name>Fact Order Payment</Name><CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp><LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate><LastProcessed>0001-01-01T00:00:00Z</LastProcessed><State>Unprocessed</State><Source xsi:type="DsvTableBinding"><DataSourceViewID>Olist DW</DataSourceViewID><TableID>dbo_fact_order_payment</TableID></Source><StorageMode>Molap</StorageMode><CurrentStorageMode>Molap</CurrentStorageMode><ProcessingMode>Regular</ProcessingMode></Partition></Partitions></MeasureGroup><MeasureGroup><ID>Fact Seller Lead</ID><Partitions><Partition><ID>Fact Seller Lead</ID><Name>Fact Seller Lead</Name><CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp><LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate><LastProcessed>0001-01-01T00:00:00Z</LastProcessed><State>Unprocessed</State><Source xsi:type="DsvTableBinding"><DataSourceViewID>Olist DW</DataSourceViewID><TableID>dbo_fact_seller_lead</TableID></Source><StorageMode>Molap</StorageMode><CurrentStorageMode>Molap</CurrentStorageMode><ProcessingMode>Regular</ProcessingMode></Partition></Partitions></MeasureGroup>
   </MeasureGroups>
 </Cube>

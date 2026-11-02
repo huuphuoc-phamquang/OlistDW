@@ -26,3 +26,12 @@ JOIN dbo.dim_customer c ON c.customer_id = f.customer_id
 JOIN dbo.dim_location l ON l.location_id = c.location_id
 JOIN dbo.dim_product  p ON p.product_id  = f.product_id
 WHERE l.geolocation_state = 'SP' AND p.product_category_name = 'beleza_saude';
+
+-- Fact Order Payment: tong va theo hinh thuc (khop Q16)
+SELECT SUM(payment_value) AS payment_value, COUNT(*) AS payment_count FROM dbo.fact_order_payment;  -- 16008872.12 / 103886
+SELECT payment_type, SUM(payment_value) AS payment_value, COUNT(*) AS payment_count
+FROM dbo.fact_order_payment GROUP BY payment_type ORDER BY 2 DESC;  -- credit_card 12542084.19 / 76795
+
+-- Fact Seller Lead: so lead, lead thang theo kenh (khop Q20)
+SELECT origin, COUNT(*) AS lead_count, SUM(CAST(is_won AS INT)) AS won_leads
+FROM dbo.fact_seller_lead GROUP BY origin ORDER BY 2 DESC;  -- organic_search 2296 / 271; tong 8000 / 842

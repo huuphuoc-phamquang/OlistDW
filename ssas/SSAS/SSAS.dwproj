@@ -43,7 +43,7 @@
       <Name>Dim Seller.dim</Name>
       <FullPath>Dim Seller.dim</FullPath>
     </ProjectItem>
-  </Dimensions>
+  <ProjectItem><Name>Dim Payment Type.dim</Name><FullPath>Dim Payment Type.dim</FullPath></ProjectItem><ProjectItem><Name>Dim Lead Origin.dim</Name><FullPath>Dim Lead Origin.dim</FullPath></ProjectItem><ProjectItem><Name>Dim Contact Date.dim</Name><FullPath>Dim Contact Date.dim</FullPath></ProjectItem></Dimensions>
   <DataSources>
     <ProjectItem>
       <Name>Olist DW.ds</Name>

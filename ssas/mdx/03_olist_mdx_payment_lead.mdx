@@ -1,0 +1,54 @@
+-- Cube: [Olist DW]   Measure group moi: [Fact Order Payment], [Fact Seller Lead]
+-- Fact Order Payment: [Payment Value], [Payment Count]       -- dim: Dim Payment Type, Dim Customer, Dim Location (qua Customer)
+-- Fact Seller Lead:   [Lead Count], [Won Leads], [Declared Monthly Revenue] -- dim: Dim Lead Origin, Dim Contact Date, Dim Seller
+-- Thanh vien [Unknown]: don thanh toan khong co dong hang (Dim Customer) va lead chua thanh seller co ban hang (Dim Seller).
+-- Chay MOI LAN MOT cau (SSMS: boi den tung cau roi F5). Cac cau ngan cach nhau boi dong "-- Qn".
+
+-- Q16 [ROLL-UP] Gia tri thanh toan theo hinh thuc thanh toan
+SELECT { [Measures].[Payment Value], [Measures].[Payment Count] } ON COLUMNS,
+       ORDER([Dim Payment Type].[Payment Type].[Payment Type].MEMBERS, [Measures].[Payment Value], BDESC) ON ROWS
+FROM [Olist DW]
+
+-- Q17 [SLICE] Chi lay thanh toan bang the tin dung (credit_card), top 8 bang
+SELECT { [Measures].[Payment Value], [Measures].[Payment Count] } ON COLUMNS,
+       TOPCOUNT([Dim Location].[Location Hierarchy].[Geolocation State].MEMBERS, 8, [Measures].[Payment Value]) ON ROWS
+FROM [Olist DW]
+WHERE ( [Dim Payment Type].[Payment Type].&[credit_card] )
+
+-- Q18 [PIVOT] Hinh thuc thanh toan dua len cot, top 5 bang tren hang
+SELECT [Dim Payment Type].[Payment Type].[Payment Type].MEMBERS ON COLUMNS,
+       TOPCOUNT([Dim Location].[Location Hierarchy].[Geolocation State].MEMBERS, 5, [Measures].[Payment Value]) ON ROWS
+FROM [Olist DW]
+WHERE ( [Measures].[Payment Value] )
+
+-- Q19 [DICE] Hai hinh thuc (credit_card, boleto) x ba bang (SP, RJ, MG)
+SELECT { [Dim Payment Type].[Payment Type].&[credit_card], [Dim Payment Type].[Payment Type].&[boleto] } ON COLUMNS,
+       { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
+         [Dim Location].[Location Hierarchy].[Geolocation State].&[RJ],
+         [Dim Location].[Location Hierarchy].[Geolocation State].&[MG] } ON ROWS
+FROM [Olist DW]
+WHERE ( [Measures].[Payment Value] )
+
+-- Q20 [ROLL-UP] So lead, lead thang va ty le chuyen doi theo kenh tiep thi (origin)
+WITH MEMBER [Measures].[Ty Le Thang] AS IIF([Measures].[Lead Count] = 0, NULL, [Measures].[Won Leads] / [Measures].[Lead Count]), FORMAT_STRING = "Percent"
+SELECT { [Measures].[Lead Count], [Measures].[Won Leads], [Measures].[Ty Le Thang] } ON COLUMNS,
+       ORDER([Dim Lead Origin].[Origin].[Origin].MEMBERS, [Measures].[Lead Count], BDESC) ON ROWS
+FROM [Olist DW]
+
+-- Q21 [DRILL-DOWN] Tu nam 2017, 2018 khoet xuong tung thang: so lead va lead thang
+SELECT { [Measures].[Lead Count], [Measures].[Won Leads] } ON COLUMNS,
+       DRILLDOWNMEMBER({ [Dim Contact Date].[Contact Date Hierarchy].[Contact Year].MEMBERS },
+                       { [Dim Contact Date].[Contact Date Hierarchy].[Contact Year].&[2017],
+                         [Dim Contact Date].[Contact Date Hierarchy].[Contact Year].&[2018] }) ON ROWS
+FROM [Olist DW]
+
+-- Q22 [PIVOT] Kenh tiep thi tren cot, 5 thang cua nam 2018 tren hang, do so lead
+SELECT [Dim Lead Origin].[Origin].[Origin].MEMBERS ON COLUMNS,
+       [Dim Contact Date].[Contact Date Hierarchy].[Contact Year].&[2018].CHILDREN ON ROWS
+FROM [Olist DW]
+WHERE ( [Measures].[Lead Count] )
+
+-- Q23 [SLICE] Doanh thu khai bao hang thang cua lead thang theo kenh tiep thi, chi nam 2018 (subselect)
+SELECT { [Measures].[Won Leads], [Measures].[Declared Monthly Revenue] } ON COLUMNS,
+       NON EMPTY ORDER([Dim Lead Origin].[Origin].[Origin].MEMBERS, [Measures].[Declared Monthly Revenue], BDESC) ON ROWS
+FROM ( SELECT [Dim Contact Date].[Contact Date Hierarchy].[Contact Year].&[2018] ON COLUMNS FROM [Olist DW] )
