@@ -50,7 +50,7 @@
 | **Dim Customer** | Customer Id | Customer Unique Id, Location Id | – |
 | **Dim Seller** | Seller Id | Location Id | – |
 | **Dim Product** | Product Id | Product Category Name, kích thước, cân nặng... | **Product Hierarchy**: `Product Category Name` → `Product Id` |
-| **Dim Product Category** | Product Category Name | Product Category Name English | – |
+| **Dim Product Category** | Product Category Name | – | – |
 | **Dim Location** | Location Id | Geolocation State, Geolocation City, Zip Code | **Location Hierarchy**: `Geolocation State` → `Geolocation City` |
 | **Dim Review** | Review Id | Review Score, Creation Date (chưa đưa vào cube) | – |
 | **Dim Payment Type** | Payment Type | – | – |
@@ -118,7 +118,7 @@ File nguồn: `ssas/mdx/01_olist_mdx_queries.mdx` (Q1 - Q15) và `03_olist_mdx_p
 
 > **Idea:** Tổng hợp số liệu từ cấp nhỏ lên cấp cao hơn dọc theo phân cấp phân tích.
 
-#### Q1 — Doanh thu theo Bang (Cấp State)
+#### Q1 - Doanh thu theo Bang (Cấp State)
 * **Idea:** Cuộn toàn bộ chi tiết đơn hàng lên 27 bang của Brazil để xem phân bổ doanh thu và cước vận chuyển.
 ```mdx
 SELECT { [Measures].[Price], [Measures].[Freight Value], [Measures].[Fact Order Items Count] } ON COLUMNS,
@@ -127,7 +127,7 @@ FROM [Olist DW]
 ```
 * **Kết quả mẫu:** AC: 15.982,95 | AL: 80.314,81 | BA: 511.349,99 | SP: 5.202.955,05 | ... (27 bang).
 
-#### Q2 — Doanh thu theo Nhóm sản phẩm (Category Level)
+#### Q2 - Doanh thu theo Nhóm sản phẩm (Category Level)
 * **Idea:** Gộp từ mức sản phẩm lên danh mục ngành hàng, sắp xếp giảm dần theo doanh thu bằng `ORDER(..., BDESC)`.
 ```mdx
 SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
@@ -136,7 +136,7 @@ FROM [Olist DW]
 ```
 * **Kết quả mẫu:** Top 1 `beleza_saude` (1.258.681,34), top 2 `relogios_presentes` (1.205.005,68), top 3 `cama_mesa_banho` (1.036.988,68)...
 
-#### Q3 — Gộp từ Thành phố lên Bang rồi lên Toàn quốc bằng `.PARENT`
+#### Q3 - Gộp từ Thành phố lên Bang rồi lên Toàn quốc bằng `.PARENT`
 * **Idea:** Dùng thuộc tính `.PARENT` để đi ngược từng bậc phân cấp địa lý: Thành phố `campinas` → Bang `SP` → Toàn quốc (`All`).
 ```mdx
 SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
@@ -147,7 +147,7 @@ FROM [Olist DW]
 ```
 * **Kết quả mẫu:** `campinas`: 187.844,53 ➔ `SP`: 5.202.955,05 ➔ `All`: 13.591.643,70 (112.650 dòng hàng).
 
-#### Q4 — Cộng dồn doanh thu các Bang từ lớn đến nhỏ (Tổng lũy kế)
+#### Q4 - Cộng dồn doanh thu các Bang từ lớn đến nhỏ (Tổng lũy kế)
 * **Idea:** Tính tổng tích lũy (Running Total) theo xếp hạng doanh thu bang để phân tích tỷ trọng đóng góp.
 ```mdx
 WITH SET [S] AS ORDER(NONEMPTY([Dim Location].[Location Hierarchy].[Geolocation State].MEMBERS, [Measures].[Price]), [Measures].[Price], BDESC)
@@ -164,7 +164,7 @@ FROM [Olist DW]
 
 > **Idea:** Mở rộng từ nút phân cấp cha xuống các nút phân cấp con bên dưới để tìm ra chi tiết cấu thành.
 
-#### Q5 — Từ 3 Bang lớn (SP, RJ, MG) khoét xuống Top 3 Thành phố của mỗi Bang
+#### Q5 - Từ 3 Bang lớn (SP, RJ, MG) khoét xuống Top 3 Thành phố của mỗi Bang
 * **Idea:** Dùng `DRILLDOWNLEVELTOP` để tự động mở rộng từng bang cha và chỉ lấy ra 3 thành phố dẫn đầu của mỗi bang đó.
 ```mdx
 SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
@@ -178,7 +178,7 @@ FROM [Olist DW]
   * `RJ` ➔ `rio de janeiro` (992.538,86), `niteroi` (91.135,16), `nova iguacu` (27.240,65).
   * `MG` ➔ `belo horizonte` (410.024,50), `juiz de fora` (43.682,75), `uberlandia` (40.916,73).
 
-#### Q6 — Từ nhóm 'cama_mesa_banho' khoét xuống 10 Sản phẩm doanh thu cao nhất
+#### Q6 - Từ nhóm 'cama_mesa_banho' khoét xuống 10 Sản phẩm doanh thu cao nhất
 * **Idea:** Dùng `.CHILDREN` kết hợp `TOPCOUNT` để lấy 10 mã sản phẩm bán chạy nhất trong một danh mục ngành hàng.
 ```mdx
 SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
@@ -187,7 +187,7 @@ FROM [Olist DW]
 ```
 * **Kết quả mẫu:** 10 sản phẩm cụ thể, sản phẩm dẫn đầu đạt 43.025,56 R$ (488 dòng hàng).
 
-#### Q7 — Top 3 Nhóm sản phẩm, mỗi nhóm khoét xuống Top 3 Sản phẩm bán chạy nhất
+#### Q7 - Top 3 Nhóm sản phẩm, mỗi nhóm khoét xuống Top 3 Sản phẩm bán chạy nhất
 * **Idea:** Lồng ghép `TOPCOUNT` vào `DRILLDOWNLEVELTOP` để tự động bung chi tiết sản phẩm cho 3 ngành hàng lớn nhất thị trường.
 ```mdx
 SELECT { [Measures].[Price] } ON COLUMNS,
@@ -202,7 +202,7 @@ FROM [Olist DW]
 
 > **Idea:** Giới hạn không gian phân tích bằng cách cố định 1 chiều (Slice qua mệnh đề `WHERE`) hoặc cắt khối con đa chiều (Dice qua Subselect / `FILTER`).
 
-#### Q8 — [Slice] Cắt theo Bang SP: Top 10 Nhóm sản phẩm bán chạy ở SP
+#### Q8 - [Slice] Cắt theo Bang SP: Top 10 Nhóm sản phẩm bán chạy ở SP
 * **Idea:** Cố định chiều địa lý tại bang São Paulo bằng `WHERE (...)` để xem cơ cấu tiêu dùng tại riêng bang này.
 ```mdx
 SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
@@ -212,7 +212,7 @@ WHERE ( [Dim Location].[Location Hierarchy].[Geolocation State].&[SP] )
 ```
 * **Kết quả mẫu:** Tại riêng SP: `cama_mesa_banho` (478.284,52), `beleza_saude` (462.305,22), `relogios_presentes` (435.009,92)...
 
-#### Q9 — [Slice 2 Chiều] Cắt đồng thời tại Bang SP và Nhóm 'beleza_saude'
+#### Q9 - [Slice 2 Chiều] Cắt đồng thời tại Bang SP và Nhóm 'beleza_saude'
 * **Idea:** Cắt lát giao giữa 1 bang và 1 ngành hàng cụ thể, kết quả trả về chính xác 1 dòng đo lường tổng hợp.
 ```mdx
 SELECT { [Measures].[Price], [Measures].[Freight Value], [Measures].[Fact Order Items Count] } ON COLUMNS
@@ -222,7 +222,7 @@ WHERE ( [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
 ```
 * **Kết quả mẫu:** Doanh thu `Price`: **462.305,22** | Cước `Freight`: **57.341,58** | Số lượng: **4.204** dòng (khớp 100% với SQL).
 
-#### Q10 — [Dice] Khối con (Sub-cube): 3 Bang $\times$ 3 Nhóm sản phẩm bằng Subselect
+#### Q10 - [Dice] Khối con (Sub-cube): 3 Bang $\times$ 3 Nhóm sản phẩm bằng Subselect
 * **Idea:** Dùng subselect lồng trong `FROM` để thu nhỏ không gian Cube thành ma trận giữa 3 bang (SP, RJ, MG) và 3 ngành hàng lớn.
 ```mdx
 SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
@@ -237,7 +237,7 @@ FROM ( SELECT { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
 ```
 * **Kết quả mẫu:** MG: 399.921,47 | RJ: 418.481,89 | SP: 1.326.946,75.
 
-#### Q11 — [Dice] Lọc theo điều kiện logic: Các Thành phố của SP có doanh thu > 100.000 R$
+#### Q11 - [Dice] Lọc theo điều kiện logic: Các Thành phố của SP có doanh thu > 100.000 R$
 * **Idea:** Dùng hàm `FILTER` để lọc các thành phố con thuộc bang SP thỏa mãn điều kiện ngưỡng doanh thu.
 ```mdx
 SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
@@ -252,7 +252,7 @@ FROM [Olist DW]
 
 > **Idea:** Đổi chiều hiển thị giữa Cột và Hàng để thay đổi góc nhìn, hoặc tạo thêm chỉ số tính toán phát sinh (`WITH MEMBER`).
 
-#### Q12 — Hàng = Top 5 Nhóm sản phẩm, Cột = 3 Bang lớn (SP, RJ, MG)
+#### Q12 - Hàng = Top 5 Nhóm sản phẩm, Cột = 3 Bang lớn (SP, RJ, MG)
 * **Idea:** Đặt nhóm ngành hàng trên hàng và các bang trên cột để so sánh doanh thu từng mặt hàng giữa các bang.
 ```mdx
 SELECT { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
@@ -264,7 +264,7 @@ WHERE ( [Measures].[Price] )
 ```
 * **Kết quả mẫu:** Cột SP/RJ/MG; Hàng: `beleza_saude` (SP 462.305,22 | RJ 145.298,62 | MG 157.558,30)...
 
-#### Q13 — Xoay ngược trục của Q12: Hàng = Bang, Cột = Nhóm sản phẩm
+#### Q13 - Xoay ngược trục của Q12: Hàng = Bang, Cột = Nhóm sản phẩm
 * **Idea:** Hoán đổi trục: Chuyển Bang xuống hàng và Nhóm sản phẩm lên cột để nhìn cơ cấu giỏ hàng theo từng địa phương.
 ```mdx
 SELECT TOPCOUNT([Dim Product].[Product Hierarchy].[Product Category Name].MEMBERS, 5, [Measures].[Price]) ON COLUMNS,
@@ -276,7 +276,7 @@ WHERE ( [Measures].[Price] )
 ```
 * **Kết quả mẫu:** Hàng SP/RJ/MG; Cột: `beleza_saude`, `relogios_presentes`, `cama_mesa_banho`, `esporte_lazer`, `informatica_acessorios`.
 
-#### Q14 — Đưa các Thước đo (Measures) xuống Hàng, Bang lên Cột
+#### Q14 - Đưa các Thước đo (Measures) xuống Hàng, Bang lên Cột
 * **Idea:** Xoay các độ đo (`Price`, `Freight Value`, `Item Count`) xuống làm tiêu đề hàng của báo cáo so sánh bang.
 ```mdx
 SELECT { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
@@ -287,7 +287,7 @@ FROM [Olist DW]
 ```
 * **Kết quả mẫu:** Hàng `Price`: SP 5.202.955,05 | RJ 1.824.092,67 | MG 1.585.308,03; Hàng `Count`: SP 47.449 | RJ 14.579 | MG 13.129.
 
-#### Q15 — Thành viên tính toán: Giá trung bình mỗi món hàng (Avg Price)
+#### Q15 - Thành viên tính toán: Giá trung bình mỗi món hàng (Avg Price)
 * **Idea:** Dùng `WITH MEMBER` và hàm `IIF` tính đơn giá bình quân (`Price / Item Count`) trên ma trận Bang $\times$ Ngành hàng.
 ```mdx
 WITH MEMBER [Measures].[Avg Price] AS 
@@ -311,7 +311,7 @@ WHERE ( [Measures].[Avg Price] )
 
 > **Lưu ý:** Các dòng mồ côi rơi vào thành viên **Unknown** của các Dimension tương ứng (xem Mục 4.1).
 
-#### Q16 — [Roll-up] Giá trị thanh toán theo hình thức thanh toán
+#### Q16 - [Roll-up] Giá trị thanh toán theo hình thức thanh toán
 * **Idea:** Tổng hợp doanh thu thanh toán theo từng phương thức (thẻ tín dụng, phiếu ngân hàng boleto, voucher, thẻ ghi nợ).
 ```mdx
 SELECT { [Measures].[Payment Value], [Measures].[Payment Count] } ON COLUMNS,
@@ -320,7 +320,7 @@ FROM [Olist DW]
 ```
 * **Kết quả mẫu:** `credit_card` chiếm áp đảo với 12.542.084,19 R$ / 76.795 lượt | `boleto` 2.869.361,27 / 19.784 | `voucher` 379.436,87 / 5.775 | `debit_card` 217.989,79 / 1.529.
 
-#### Q17 — [Slice] Chỉ lấy thanh toán bằng thẻ tín dụng (credit_card) tại Top 8 Bang
+#### Q17 - [Slice] Chỉ lấy thanh toán bằng thẻ tín dụng (credit_card) tại Top 8 Bang
 * **Idea:** Lọc cố định phương thức `credit_card` qua `WHERE` và hiển thị 8 bang có giá trị cà thẻ cao nhất.
 ```mdx
 SELECT { [Measures].[Payment Value], [Measures].[Payment Count] } ON COLUMNS,
@@ -330,7 +330,7 @@ WHERE ( [Dim Payment Type].[Payment Type].&[credit_card] )
 ```
 * **Kết quả mẫu:** SP: 4.625.784,80 / 31.927 lượt | RJ: 1.719.332,62 / 10.223 | MG: 1.460.905,12 / 9.004 | RS: 660.689,50 / 3.966...
 
-#### Q18 — [Pivot] Hình thức thanh toán đưa lên Cột, Top 5 Bang trên Hàng
+#### Q18 - [Pivot] Hình thức thanh toán đưa lên Cột, Top 5 Bang trên Hàng
 * **Idea:** Ma trận so sánh thói quen lựa chọn phương thức thanh toán của người tiêu dùng tại 5 bang dẫn đầu.
 ```mdx
 SELECT [Dim Payment Type].[Payment Type].[Payment Type].MEMBERS ON COLUMNS,
@@ -340,7 +340,7 @@ WHERE ( [Measures].[Payment Value] )
 ```
 * **Kết quả mẫu:** Bang SP: `boleto` 1.071.968,52 | `credit_card` 4.625.784,80 | `debit_card` 85.898,49 | `voucher` 138.596,26...
 
-#### Q19 — [Dice] Hai hình thức (credit_card, boleto) $\times$ Ba bang (SP, RJ, MG)
+#### Q19 - [Dice] Hai hình thức (credit_card, boleto) $\times$ Ba bang (SP, RJ, MG)
 * **Idea:** Cắt ma trận kiểm tra tương quan giữa 2 hình thức thanh toán chủ chốt với 3 bang lớn nhất.
 ```mdx
 SELECT { [Dim Payment Type].[Payment Type].&[credit_card], [Dim Payment Type].[Payment Type].&[boleto] } ON COLUMNS,
@@ -352,7 +352,7 @@ WHERE ( [Measures].[Payment Value] )
 ```
 * **Kết quả mẫu:** SP: 4.625.784,80 (thẻ) / 1.071.968,52 (boleto); RJ: 1.719.332,62 / 326.296,49; MG: 1.460.905,12 / 338.448,17.
 
-#### Q20 — [Roll-up / Calculated Member] Số lead, lead thắng và Tỷ lệ chuyển đổi theo Kênh tiếp thị
+#### Q20 - [Roll-up / Calculated Member] Số lead, lead thắng và Tỷ lệ chuyển đổi theo Kênh tiếp thị
 * **Idea:** Dùng `WITH MEMBER` tính tỷ lệ chốt đơn (`Won Leads / Lead Count`) theo từng kênh thu hút người bán (`origin`).
 ```mdx
 WITH MEMBER [Measures].[Ty Le Thang] AS 
@@ -364,7 +364,7 @@ FROM [Olist DW]
 ```
 * **Kết quả mẫu:** `organic_search`: 2.296 leads / 271 thắng / 11,80% | `paid_search`: 1.586 / 195 / 12,30% | `social`: 1.350 / 75 / 5,56%... (tổng: 8.000 leads / 842 thắng).
 
-#### Q21 — [Drill-down] Từ Năm 2017 & 2018 khoét sâu xuống từng Tháng: Số lead và lead thắng
+#### Q21 - [Drill-down] Từ Năm 2017 & 2018 khoét sâu xuống từng Tháng: Số lead và lead thắng
 * **Idea:** Dùng `DRILLDOWNMEMBER` mở rộng phân cấp thời gian từ năm 2017, 2018 xuống chi tiết từng tháng liên hệ.
 ```mdx
 SELECT { [Measures].[Lead Count], [Measures].[Won Leads] } ON COLUMNS,
@@ -375,7 +375,7 @@ FROM [Olist DW]
 ```
 * **Kết quả mẫu:** Năm 2017 có 2.002 leads / 61 thắng (tháng 06 đến tháng 12) | Năm 2018 có 5.998 leads / 781 thắng (tháng 01 đến tháng 05).
 
-#### Q22 — [Pivot] Kênh tiếp thị trên Cột, 5 tháng năm 2018 trên Hàng
+#### Q22 - [Pivot] Kênh tiếp thị trên Cột, 5 tháng năm 2018 trên Hàng
 * **Idea:** Ma trận theo dõi diễn biến thu hút leads của các kênh marketing qua từng tháng trong năm 2018.
 ```mdx
 SELECT [Dim Lead Origin].[Origin].[Origin].MEMBERS ON COLUMNS,
@@ -385,7 +385,7 @@ WHERE ( [Measures].[Lead Count] )
 ```
 * **Kết quả mẫu:** Tháng 2018-01: `organic_search` 412, `paid_search` 170, `social` 162... (gồm 5 hàng từ tháng 01 đến tháng 05).
 
-#### Q23 — [Slice] Doanh thu khai báo của lead thắng theo Kênh tiếp thị, chỉ xét năm 2018
+#### Q23 - [Slice] Doanh thu khai báo của lead thắng theo Kênh tiếp thị, chỉ xét năm 2018
 * **Idea:** Lọc riêng năm 2018 bằng subselect để phân tích quy mô doanh thu tự khai báo (`Declared Monthly Revenue`) của người bán chốt thành công.
 ```mdx
 SELECT { [Measures].[Won Leads], [Measures].[Declared Monthly Revenue] } ON COLUMNS,
