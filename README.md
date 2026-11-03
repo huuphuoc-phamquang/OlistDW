@@ -51,6 +51,6 @@ Kết quả đúng: `fact_order_items` có 112.650 dòng, tổng `price` 13.591.
 
 - SQL Server 2025 và SSAS **Multidimensional**, edition **Enterprise Developer** (Standard Developer báo lỗi `StandardDeveloper64` với client của Visual Studio). Extension: *SQL Server Integration Services Projects* và *Analysis Services Projects*.
 - Tài khoản chạy SSAS (`NT Service\MSOLAP$<instance>`) cần quyền `db_datareader` trên OlistDW, và Data Source dùng *Use the service account*.
-- Flat File Connection phải đặt `LocaleID = 1033` (English - US) và code page 65001, nếu không giá trị số bị nhân 10/100.
+- Flat File Connection phải đặt `LocaleID = 1033` (English - US) và code page 65001.
 - Chạy lại package SSIS trên database đã có dữ liệu sẽ lỗi trùng khóa ở các task DIM_*; chạy lại `sql/01_create_tables.sql` trước.
 - Hướng dẫn chi tiết cube, dimension và 23 truy vấn MDX: `docs/huong_dan_ssas_mdx.md`.
