@@ -47,14 +47,14 @@
 
 | Dimension | Khóa chính | Thuộc tính chính | Hierarchy (Phân cấp) |
 |---|---|---|---|
-| **Dim Customer** | Customer Id | Customer Unique Id, Location Id | – |
-| **Dim Seller** | Seller Id | Location Id | – |
+| **Dim Customer** | Customer Id | Customer Unique Id, Location Id | - |
+| **Dim Seller** | Seller Id | Location Id | - |
 | **Dim Product** | Product Id | Product Category Name, kích thước, cân nặng... | **Product Hierarchy**: `Product Category Name` → `Product Id` |
-| **Dim Product Category** | Product Category Name | – | – |
+| **Dim Product Category** | Product Category Name | - | - |
 | **Dim Location** | Location Id | Geolocation State, Geolocation City, Zip Code | **Location Hierarchy**: `Geolocation State` → `Geolocation City` |
-| **Dim Review** | Review Id | Review Score, Creation Date (chưa đưa vào cube) | – |
-| **Dim Payment Type** | Payment Type | – | – |
-| **Dim Lead Origin** | Origin | – | – |
+| **Dim Review** | Review Id | Review Score, Creation Date (chưa đưa vào cube) | - |
+| **Dim Payment Type** | Payment Type | - | - |
+| **Dim Lead Origin** | Origin | - | - |
 | **Dim Contact Date** | Contact Month (`2018-02`) | Contact Year | **Contact Date Hierarchy**: `Contact Year` → `Contact Month` |
 
 ### 💡 Idea cốt lõi khi tạo Hierarchy trong Dimension Designer:
