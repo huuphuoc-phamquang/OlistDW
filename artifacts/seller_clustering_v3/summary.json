@@ -8,45 +8,43 @@
     "review_score_mean",
     "category_count",
     "avg_ship_distance_km",
-    "hot_score",
     "delivery_days_mean",
     "price_index",
-    "freight_per_item",
-    "interstate_rate"
+    "freight_per_item"
   ],
   "kmeans": {
     "k": 5,
-    "k_by_rule": 4,
+    "k_by_rule": 5,
     "n_clusters": 5.0,
     "noise_share": 0.0,
-    "silhouette": 0.13344374809921306,
-    "davies_bouldin": 1.8778674226793968,
-    "calinski_harabasz": 286.9112338324453,
-    "min_cluster_share": 0.099577266322217
+    "silhouette": 0.1688776912816872,
+    "davies_bouldin": 1.6052246449540568,
+    "calinski_harabasz": 356.2268331873369,
+    "min_cluster_share": 0.10098637858149366
   },
   "gmm": {
     "covariance": "full",
-    "k": 3,
-    "n_clusters": 3.0,
+    "k": 7,
+    "n_clusters": 7.0,
     "noise_share": 0.0,
-    "silhouette": 0.08399398230108183,
-    "davies_bouldin": 2.5677343630183844,
-    "calinski_harabasz": 196.1247842756391,
-    "min_cluster_share": 0.2062000939408173
+    "silhouette": 0.027273858461230125,
+    "davies_bouldin": 2.745440227863296,
+    "calinski_harabasz": 146.6702855534027,
+    "min_cluster_share": 0.05777360263034288
   },
   "dbscan": {
-    "eps": 2.939288134671058,
-    "min_samples": 24,
+    "eps": 2.3704957851080977,
+    "min_samples": 20,
     "n_clusters": 1.0,
-    "noise_share": 0.03240958196336308,
+    "noise_share": 0.05166744950681068,
     "silhouette": NaN,
     "davies_bouldin": NaN,
     "calinski_harabasz": NaN,
     "min_cluster_share": NaN
   },
   "pca_explained_variance": [
-    0.24074445174270706,
-    0.1545870337573691
+    0.2595017105539213,
+    0.18342371536411353
   ],
-  "kmeans_seed_ari_min": 0.8684132800841435
+  "kmeans_seed_ari_min": 0.9838688901124218
 }
