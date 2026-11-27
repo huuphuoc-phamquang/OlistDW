@@ -1,4 +1,31 @@
-# Phân khúc nhà bán hàng Olist: bước 1-3 (Tzy)
+# Phân khúc nhà bán hàng Olist của Tzy
+
+## Bản cập nhật theo đề xuất leader ngày 27/11/2026
+
+**Dùng bản v2 cho các lần chạy mới và so sánh thuật toán.** Bản 9 đặc trưng bên dưới được giữ làm baseline, không trộn ma trận baseline với kết quả K-Means v2.
+
+1. Chạy `notebooks/seller_segmentation_features_v2.ipynb` để tính đặc trưng, chọn cohort và chuẩn hóa.
+2. Chạy `notebooks/seller_segmentation_kmeans.ipynb` để quét k, chọn mô hình ứng viên, kiểm tra ổn định và độ nhạy.
+3. Đọc [bàn giao Tzy](../docs/tzy_seller_segmentation_handoff.md) và [định nghĩa đặc trưng v2](../docs/seller_features_v2.md).
+
+Hai notebook đã được Run All và lưu output trên dữ liệu thật. Chúng chứa đầy đủ mã; notebook K-Means cần các CSV đầu ra của notebook đặc trưng. Trong môi trường mới, cài `mining/requirements.txt`, chỉnh `SOURCE` hoặc biến môi trường `OLIST_SOURCE`.
+
+```bash
+python mining/seller_features_extended.py --source data/raw/csv --output artifacts/seller_segmentation_v2 --min-orders 3
+python mining/seller_kmeans.py --inputs artifacts/seller_segmentation_v2 --output artifacts/seller_kmeans
+python mining/prepare_segment_handoff.py
+python -m unittest discover -s mining -p "test_*.py" -v
+```
+
+Nguồn v2 cần thêm `customers`, `geolocation`, `order_payments`, `leads_closed` ngoài năm bảng baseline. Tên CSV thô có thể là `<table>.csv` hoặc `olist_<table>_dataset.csv`; SQLite cần bảng cùng tên. Các thuộc tính marketing chỉ dùng mô tả, không impute vào mô hình.
+
+Kết quả v2: 2.970 seller có đơn delivered, 2.129 seller ≥3 đơn dùng 12 cột; K-Means ứng viên k=5, Silhouette 0,1480. Khoảng 97,997% doanh số delivered nằm trong cohort chính. **Cụm còn chồng lấn**; Phu0c cần so GMM/DBSCAN trước khi chốt tên và mô hình cuối.
+
+`prepare_segment_handoff.py` tạo SQL mapping đủ 3.095 seller và cập nhật source DSV/Dim Seller/cube trên branch. Script không tự kết nối hoặc deploy SSAS. Chạy SQL với database đích chỉ định rõ; không chạy lại `01_create_tables.sql` vì script đó xóa bảng. Nhãn `KMeans C0..C4` là ứng viên. SQL đã kiểm chứng trên database thử nghiệm `OlistDW_SSIS_Tzy_20261127`; source SSAS mới chỉ kiểm tra cấu trúc XML và liên kết cột, chưa build/deploy/process do máy không có dịch vụ SSAS.
+
+`python mining/build_extended_notebooks.py` đồng bộ hai notebook v2 từ code; lệnh này xóa output cũ trong notebook nên phải Run All lại trước khi bàn giao.
+
+## Baseline 9 đặc trưng trước đề xuất mới
 
 Phần này chuẩn bị dữ liệu cho K-Means, GMM và DBSCAN. Nguồn vẫn là [Olist SQLite đã chọn](https://www.kaggle.com/datasets/terencicp/e-commerce-dataset-by-olist-as-an-sqlite-database). Đây là phần Data mining trong bảng phân công; chưa huấn luyện hay chọn mô hình phân cụm.
 

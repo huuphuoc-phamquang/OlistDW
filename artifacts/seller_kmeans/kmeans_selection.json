@@ -1,0 +1,51 @@
+{
+  "selected_k": 5,
+  "selection_rule": "Maximum full-cohort silhouette over k=2..10 with minimum cluster share >= 2%; inspect elbow alongside",
+  "random_state": 42,
+  "n_init": 30,
+  "model_shape": [
+    2129,
+    12
+  ],
+  "feature_order": [
+    "order_count",
+    "avg_order_value",
+    "recency_days",
+    "tenure_days",
+    "late_delivery_rate",
+    "review_score_mean",
+    "category_count",
+    "avg_ship_distance_km",
+    "repeat_customer_rate",
+    "cancel_rate",
+    "hot_score",
+    "delivery_days_mean"
+  ],
+  "matrix_sha256": "94f265648d33ead87073b41e94d54a638d5bd0c9a5f9d0b91ead292773e21d81",
+  "selected_metrics": {
+    "k": 5.0,
+    "inertia": 16770.914160981552,
+    "silhouette": 0.148018154612303,
+    "davies_bouldin": 1.7542221374957598,
+    "calinski_harabasz": 277.899733776074,
+    "min_cluster_size": 55.0,
+    "max_cluster_size": 655.0,
+    "min_cluster_share": 0.025833724753405354
+  },
+  "stability_ari_min": 0.9971743918009086,
+  "stability_ari_mean": 0.9983325247327807,
+  "all_seller_same_k_ari_on_shared_sellers": 0.5583731620793341,
+  "all_seller_best_silhouette_k": 7,
+  "pca_explained_variance_ratio": [
+    0.21012987444588002,
+    0.15157881972038834
+  ],
+  "status": "KMeans candidate; final comparison with GMM and DBSCAN belongs to Phu0c",
+  "limitations": [
+    "Historical descriptive clustering, not out-of-sample validation",
+    "Geography uses zip centroids, not actual shipping route",
+    "Review and delivery shared by all sellers of an order",
+    "Review answer timestamp records customer survey response, not seller response",
+    "Cancellation denominator covers only orders with seller-attributable items"
+  ]
+}

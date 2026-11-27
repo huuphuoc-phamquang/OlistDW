@@ -1,0 +1,24 @@
+{
+  "model_shape": [
+    2129,
+    12
+  ],
+  "profile_shape": [
+    2970,
+    82
+  ],
+  "mapping_rows": 3095,
+  "notebooks": {
+    "seller_segmentation_features_v2.ipynb": {
+      "executed_code_cells": 5,
+      "errors": 0
+    },
+    "seller_segmentation_kmeans.ipynb": {
+      "executed_code_cells": 5,
+      "errors": 0
+    }
+  },
+  "regression_tests_passed": 10,
+  "sql_mapping_missing": 0,
+  "ssas_runtime_verified": false
+}

@@ -1,0 +1,185 @@
+{
+  "feature_order": [
+    "order_count",
+    "avg_order_value",
+    "recency_days",
+    "tenure_days",
+    "late_delivery_rate",
+    "review_score_mean",
+    "category_count",
+    "avg_ship_distance_km",
+    "repeat_customer_rate",
+    "cancel_rate",
+    "hot_score",
+    "delivery_days_mean"
+  ],
+  "candidate_features": [
+    "order_count",
+    "avg_order_value",
+    "recency_days",
+    "tenure_days",
+    "late_delivery_rate",
+    "delivery_days_mean",
+    "cancel_rate",
+    "review_score_mean",
+    "low_star_rate",
+    "category_count",
+    "category_hhi",
+    "price_index",
+    "avg_ship_distance_km",
+    "repeat_customer_rate",
+    "hot_score"
+  ],
+  "log1p_features": [
+    "order_count",
+    "avg_order_value",
+    "recency_days",
+    "tenure_days",
+    "delivery_days_mean",
+    "category_count",
+    "avg_ship_distance_km"
+  ],
+  "medians": {
+    "order_count": 12.0,
+    "avg_order_value": 109.06960000000001,
+    "recency_days": 28.0,
+    "tenure_days": 329.0,
+    "late_delivery_rate": 0.03278688524590164,
+    "review_score_mean": 4.244897959183674,
+    "category_count": 2.0,
+    "avg_ship_distance_km": 564.1081044618514,
+    "repeat_customer_rate": 0.0,
+    "cancel_rate": 0.0,
+    "hot_score": 0.04198561299471272,
+    "delivery_days_mean": 11.378096891534392
+  },
+  "mean": {
+    "order_count": 2.871122131247411,
+    "avg_order_value": 4.755344747647644,
+    "recency_days": 3.644360970639203,
+    "tenure_days": 5.591584938435718,
+    "late_delivery_rate": 0.0656003972063498,
+    "review_score_mean": 4.18249137214837,
+    "category_count": 1.1384693728905322,
+    "avg_ship_distance_km": 6.28628145511584,
+    "repeat_customer_rate": 0.007481577311851316,
+    "cancel_rate": 0.00726329830626069,
+    "hot_score": 0.042874092068893414,
+    "delivery_days_mean": 2.506383933548217
+  },
+  "scale": {
+    "order_count": 1.2034065788341695,
+    "avg_order_value": 0.8538371570365837,
+    "recency_days": 1.415882920782191,
+    "tenure_days": 0.7896932323823853,
+    "late_delivery_rate": 0.09509202490691147,
+    "review_score_mean": 0.505552426114855,
+    "category_count": 0.4758508981820508,
+    "avg_ship_distance_km": 0.5446548740049018,
+    "repeat_customer_rate": 0.034646372070801984,
+    "cancel_rate": 0.03294048826228468,
+    "hot_score": 0.02533049454218657,
+    "delivery_days_mean": 0.344397468327482
+  },
+  "selection_decisions": [
+    {
+      "feature": "order_count",
+      "decision": "keep"
+    },
+    {
+      "feature": "avg_order_value",
+      "decision": "keep"
+    },
+    {
+      "feature": "recency_days",
+      "decision": "keep"
+    },
+    {
+      "feature": "tenure_days",
+      "decision": "keep"
+    },
+    {
+      "feature": "late_delivery_rate",
+      "decision": "keep"
+    },
+    {
+      "feature": "review_score_mean",
+      "decision": "keep"
+    },
+    {
+      "feature": "category_count",
+      "decision": "keep"
+    },
+    {
+      "feature": "avg_ship_distance_km",
+      "decision": "keep"
+    },
+    {
+      "feature": "repeat_customer_rate",
+      "decision": "keep"
+    },
+    {
+      "feature": "cancel_rate",
+      "decision": "keep"
+    },
+    {
+      "feature": "price_index",
+      "decision": "drop",
+      "reason": "correlation >= 0.75",
+      "with": [
+        "avg_order_value"
+      ]
+    },
+    {
+      "feature": "hot_score",
+      "decision": "keep"
+    },
+    {
+      "feature": "delivery_days_mean",
+      "decision": "keep"
+    },
+    {
+      "feature": "category_hhi",
+      "decision": "drop",
+      "reason": "correlation >= 0.75",
+      "with": [
+        "category_count"
+      ]
+    },
+    {
+      "feature": "low_star_rate",
+      "decision": "drop",
+      "reason": "correlation >= 0.75",
+      "with": [
+        "review_score_mean"
+      ]
+    }
+  ],
+  "selection_rule": "Priority representatives; absolute Pearson >= 0.75 after imputation/log; no forced padding",
+  "excluded_by_design": [
+    "freight_to_price_ratio",
+    "seller_state",
+    "seller_region",
+    "is_sp",
+    "marketing attributes"
+  ],
+  "random_state": 42,
+  "outlier_policy": "retain; compare cohort sensitivity; no clipping",
+  "missing_before_imputation": {
+    "order_count": 0,
+    "avg_order_value": 0,
+    "recency_days": 0,
+    "tenure_days": 0,
+    "late_delivery_rate": 0,
+    "delivery_days_mean": 0,
+    "cancel_rate": 0,
+    "review_score_mean": 0,
+    "low_star_rate": 0,
+    "category_count": 0,
+    "category_hhi": 0,
+    "price_index": 0,
+    "avg_ship_distance_km": 0,
+    "repeat_customer_rate": 0,
+    "hot_score": 0
+  }
+}
