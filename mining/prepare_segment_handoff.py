@@ -5,11 +5,18 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 
 ROOT=Path(__file__).resolve().parents[1]
-OUT=ROOT/'artifacts/seller_kmeans'
-data=pd.read_csv(OUT/'seller_segment_dimension.csv',dtype=str)
+OUT=ROOT/'artifacts/seller_clustering_v3'
+# Nhãn v3 (K-Means k=5, notebooks/seller_clustering_v3.ipynb); số cụm đã đánh lại theo doanh số giảm dần
+V3_NAMES={0:'C0 Chủ lực đa ngành',1:'C1 Giá cao, giao xa',2:'C2 Ngưng hoạt động',3:'C3 Mới, bán gần',4:'C4 Giao trễ, review thấp'}
+OUTSIDE={'Insufficient orders':'Ít đơn (dưới 3 đơn)','No eligible delivered sales':'Chưa có đơn delivered'}
+# Bảng của Tzy có đủ 3.095 seller và vùng; seller ngoài cohort giữ lý do loại
+base=pd.read_csv(ROOT/'artifacts/seller_kmeans/seller_segment_dimension.csv',dtype=str)
+v3=pd.read_csv(OUT/'seller_assignments.csv',dtype={'seller_id':str}).set_index('seller_id')['kmeans'].map(V3_NAMES)
+data=base[['seller_id','seller_region']].assign(seller_segment=base.seller_id.map(v3).fillna(base.seller_segment.map(OUTSIDE)))
+assert set(v3.index)<=set(base.seller_id) and data.seller_segment.isin(V3_NAMES.values()).sum()==len(v3)
 assert data.seller_id.is_unique and not data.isna().any().any()
 def literal(v):return "N'"+v.replace("'","''")+"'"
-parts=["""-- Tzy: KMeans candidate labels, not the final multi-algorithm segmentation.
+parts=["""-- Phân khúc seller v3 (K-Means k=5), sinh bởi mining/prepare_segment_handoff.py.
 -- Run with sqlcmd -S <server> -E -b -d <explicit_target_database> -i <this_file>
 -- SQL Server database must already contain dbo.dim_seller. No source rows are deleted.
 SET NOCOUNT ON;

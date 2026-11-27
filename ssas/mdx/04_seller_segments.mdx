@@ -1,18 +1,18 @@
--- Requires load_seller_segments.sql, updated SSAS source and Process Full.
--- Labels KMeans C0..C4 are candidates, not final business segment names.
--- Slice: sales of the KMeans C4 candidate.
+-- Cần chạy artifacts/seller_clustering_v3/load_seller_segments.sql, deploy SSAS rồi Process Full.
+-- Nhãn phân khúc lấy từ K-Means k=5 (notebooks/seller_clustering_v3.ipynb).
+-- Slice: doanh số theo bang của phân khúc giao trễ, review thấp.
 SELECT {[Measures].[Price], [Measures].[Freight Value]} ON COLUMNS,
  NON EMPTY [Dim Location].[Geolocation State].[Geolocation State].MEMBERS ON ROWS
 FROM [Olist DW]
-WHERE ([Dim Seller].[Seller Segment].&[KMeans C4]);
+WHERE ([Dim Seller].[Seller Segment].&[C4 Giao trễ, review thấp]);
 
--- Pivot: Segment x state, displaying price.
+-- Pivot: phân khúc x bang, hiển thị doanh số.
 SELECT NON EMPTY [Dim Seller].[Seller Segment].[Seller Segment].MEMBERS ON COLUMNS,
  NON EMPTY [Dim Location].[Geolocation State].[Geolocation State].MEMBERS ON ROWS
 FROM [Olist DW]
 WHERE ([Measures].[Price]);
 
--- Region of seller: not the same as the location dimension's order/customer geography.
+-- Vùng của seller (khác Dim Location là địa lý của khách) x phân khúc.
 SELECT {[Measures].[Price]} ON COLUMNS,
  NON EMPTY CROSSJOIN(
   [Dim Seller].[Seller Region].[Seller Region].MEMBERS,
