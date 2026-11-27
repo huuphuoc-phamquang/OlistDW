@@ -1,0 +1,98 @@
+{
+  "feature_order": [
+    "order_count",
+    "avg_order_value",
+    "category_count",
+    "freight_to_price_ratio",
+    "review_score_mean",
+    "late_delivery_rate",
+    "delivery_days_mean",
+    "recency_days",
+    "tenure_days"
+  ],
+  "log1p_features": [
+    "order_count",
+    "avg_order_value",
+    "category_count",
+    "freight_to_price_ratio",
+    "delivery_days_mean",
+    "recency_days",
+    "tenure_days"
+  ],
+  "imputation": "per-feature median before log1p",
+  "medians": {
+    "order_count": 7.0,
+    "avg_order_value": 105.14384444444445,
+    "category_count": 1.0,
+    "freight_to_price_ratio": 0.20545714288388328,
+    "review_score_mean": 4.28169014084507,
+    "late_delivery_rate": 0.0,
+    "delivery_days_mean": 11.150963151060626,
+    "recency_days": 43.0,
+    "tenure_days": 294.0
+  },
+  "scaler": "StandardScaler (population variance, ddof=0)",
+  "mean": {
+    "order_count": 2.2961710839588387,
+    "avg_order_value": 4.732810965849539,
+    "category_count": 0.9898712947195063,
+    "freight_to_price_ratio": 0.22193691665872414,
+    "review_score_mean": 4.17632410168623,
+    "late_delivery_rate": 0.0690785338896696,
+    "delivery_days_mean": 2.4861255486097513,
+    "recency_days": 3.9594062274221287,
+    "tenure_days": 5.408913574137632
+  },
+  "scale": {
+    "order_count": 1.3732169407422397,
+    "avg_order_value": 0.9445412806845205,
+    "category_count": 0.462196991215207,
+    "freight_to_price_ratio": 0.15119553573456185,
+    "review_score_mean": 0.7740336516270105,
+    "late_delivery_rate": 0.15622984039314086,
+    "delivery_days_mean": 0.42375908323885225,
+    "recency_days": 1.4745786988172038,
+    "tenure_days": 0.9676070161817132
+  },
+  "variance": {
+    "order_count": 1.8857247663414756,
+    "avg_order_value": 0.8921582309171541,
+    "category_count": 0.21362605868839016,
+    "freight_to_price_ratio": 0.022860090026061167,
+    "review_score_mean": 0.5991280938510443,
+    "late_delivery_rate": 0.02440776302926627,
+    "delivery_days_mean": 0.1795717606274325,
+    "recency_days": 2.174382339005438,
+    "tenure_days": 0.9362633377640782
+  },
+  "missing_before_imputation": {
+    "order_count": 0,
+    "avg_order_value": 0,
+    "category_count": 0,
+    "freight_to_price_ratio": 0,
+    "review_score_mean": 5,
+    "late_delivery_rate": 0,
+    "delivery_days_mean": 0,
+    "recency_days": 0,
+    "tenure_days": 0
+  },
+  "iqr_outlier_counts": {
+    "order_count": 402,
+    "avg_order_value": 306,
+    "category_count": 399,
+    "freight_to_price_ratio": 177,
+    "review_score_mean": 152,
+    "late_delivery_rate": 278,
+    "delivery_days_mean": 144,
+    "recency_days": 156,
+    "tenure_days": 0
+  },
+  "outlier_policy": "Retain all eligible sellers; no clipping or automatic outlier deletion.",
+  "constant_features": [],
+  "versions": {
+    "python": "3.12.14",
+    "pandas": "3.0.1",
+    "numpy": "2.5.5",
+    "scikit_learn": "1.9.1"
+  }
+}

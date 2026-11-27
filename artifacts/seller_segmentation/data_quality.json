@@ -1,0 +1,69 @@
+{
+  "source_rows": {
+    "sellers": 3095,
+    "order_items": 112650,
+    "orders": 99441,
+    "products": 32951,
+    "order_reviews": 99224
+  },
+  "exact_duplicates_removed": {
+    "sellers": 0,
+    "order_items": 0,
+    "orders": 0,
+    "products": 0,
+    "order_reviews": 0
+  },
+  "invalid_dates": {
+    "order_purchase_timestamp": 0,
+    "order_delivered_customer_date": 0,
+    "order_estimated_delivery_date": 0
+  },
+  "invalid_review_scores": 0,
+  "item_rows_by_order_status": {
+    "delivered": 110197,
+    "shipped": 1185,
+    "canceled": 542,
+    "invoiced": 359,
+    "processing": 357,
+    "unavailable": 7,
+    "approved": 3
+  },
+  "delivered_items_missing_purchase_date": 0,
+  "eligible_item_rows": 110197,
+  "eligible_orders": 96478,
+  "multi_seller_orders": 1275,
+  "orders_with_multiple_reviews": 547,
+  "reference_date": "2018-08-30T00:00:00",
+  "purchase_start": "2016-09-15T12:16:38",
+  "purchase_end": "2018-08-29T15:00:37",
+  "eligible_sellers": 2970,
+  "excluded_sellers": 125,
+  "invalid_delivery_seller_orders": 8,
+  "invalid_deadline_seller_orders": 8,
+  "source_manifest": {
+    "sellers": {
+      "name": "sellers.csv",
+      "sha256": "34bf5e453de76269c0a43c783ddde43f6836c8a0f9f8004ea733197154483421"
+    },
+    "order_items": {
+      "name": "order_items.csv",
+      "sha256": "f150d8ff15bdb615f65698d9bd8ad1b0801c98e13e120d9a10064118845f8301"
+    },
+    "orders": {
+      "name": "orders.csv",
+      "sha256": "0f2283fe7aa4e3337e204f4cb976e6f9f6f75cdad52ad35a5fd382d1a78d4a12"
+    },
+    "products": {
+      "name": "products.csv",
+      "sha256": "3129123b81a5d6128f387b815a0fc54b06aa949384ddb1ebb2f0eb6f29a2475e"
+    },
+    "order_reviews": {
+      "name": "order_reviews.csv",
+      "sha256": "0ee43d4cc9c2b3fc2f33490b331b4c51a752afbaf4eb2f584496fed5fe3e1791"
+    }
+  },
+  "model_shape": [
+    2970,
+    9
+  ]
+}

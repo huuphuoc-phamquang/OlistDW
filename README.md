@@ -2,6 +2,8 @@
 
 Kho dữ liệu cho bộ dữ liệu thương mại điện tử Olist: tiền xử lý (Python) → nạp SQL Server (SSIS) → cube SSAS Multidimensional → truy vấn MDX.
 
+Phần **Data mining - Seller Segmentation (Tzy, bước 1-3)**: [hướng dẫn và định nghĩa đặc trưng](mining/README.md), [notebook chuẩn bị dữ liệu](notebooks/seller_segmentation_preparation.ipynb), [kết quả chạy thực tế](artifacts/seller_segmentation). Đầu vào dùng chung cho K-Means, GMM và DBSCAN; chưa huấn luyện mô hình.
+
 ## Cấu trúc thư mục
 
 ```

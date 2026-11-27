@@ -19,3 +19,9 @@ obj/
 .vs/
 *.dwproj.user
 *.dtproj.user
+
+# Python cache and local environments
+__pycache__/
+*.py[cod]
+.venv/
+.ipynb_checkpoints/
