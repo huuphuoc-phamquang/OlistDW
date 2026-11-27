@@ -56,6 +56,8 @@ Khi viết MDX, dùng **đúng tên** dưới đây. Nếu deploy báo lỗi tê
 | `[Dim Payment Type]` | `[Payment Type]` | `[Payment Type]` (vd `&[credit_card]`, `&[boleto]`) |
 | `[Dim Lead Origin]` | `[Origin]` | `[Origin]` |
 | `[Dim Contact Date]` | `[Contact Date Hierarchy]` | `[Contact Year]` → tháng |
+| `[Dim Order Date]` | `[Order Date Hierarchy]` | `[Order Year]` → `[Order Month]` (key năm-tháng dạng `&[2017]`, tên tháng `2017-01`); lấy từ `order_purchase_timestamp`, chỉ gắn với measure group Order Items |
+| `[Dim Seller]` | `[Seller Segment]`, `[Seller Region]` | Phân khúc K-Means v3 (vd `&[C4 Giao trễ, review thấp]`), seller ngoài cohort là `Ít đơn (dưới 3 đơn)` hoặc `Chưa có đơn delivered`; nạp bằng `artifacts/seller_clustering_v3/load_seller_segments.sql` |
 
 **Measures**
 
