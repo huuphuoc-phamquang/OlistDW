@@ -502,7 +502,7 @@
                   </xs:element>
                   <xs:element name="price" msprop:FriendlyName="price" msprop:DbColumnName="price" msprop:design-time-name="1f169b73-6fb5-4445-b8bc-c757dc620043" type="xs:decimal" minOccurs="0" />
                   <xs:element name="freight_value" msprop:FriendlyName="freight_value" msprop:DbColumnName="freight_value" msprop:design-time-name="48b26346-d0c8-429a-95a9-7f7d0819afb2" type="xs:decimal" minOccurs="0" />
-                </xs:sequence>
+                <xs:element name="order_year" msprop:IsLogical="True" msprop:ComputedColumnExpression="YEAR(order_purchase_timestamp)" msprop:FriendlyName="order_year" msprop:DbColumnName="order_year" type="xs:int" minOccurs="0"></xs:element><xs:element name="order_ym" msprop:IsLogical="True" msprop:ComputedColumnExpression="YEAR(order_purchase_timestamp) * 100 + MONTH(order_purchase_timestamp)" msprop:FriendlyName="order_ym" msprop:DbColumnName="order_ym" type="xs:int" minOccurs="0"></xs:element><xs:element name="order_ym_name" msprop:IsLogical="True" msprop:ComputedColumnExpression="CONVERT(varchar(7), order_purchase_timestamp, 120)" msprop:FriendlyName="order_ym_name" msprop:DbColumnName="order_ym_name" minOccurs="0"><xs:simpleType><xs:restriction base="xs:string"><xs:maxLength value="255" /></xs:restriction></xs:simpleType></xs:element></xs:sequence>
               </xs:complexType>
             </xs:element>
             <xs:element name="dbo_fact_order_payment" msprop:design-time-name="92601313-49c9-4e04-a1b2-c090b7c6267e" msprop:FriendlyName="fact_order_payment" msprop:TableType="Table" msprop:DbSchemaName="dbo" msprop:DbTableName="fact_order_payment">

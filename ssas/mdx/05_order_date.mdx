@@ -1,0 +1,16 @@
+-- Dim Order Date lấy từ order_purchase_timestamp của fact_order_items (Year > Month).
+-- Roll-up: doanh số và số món theo năm.
+SELECT {[Measures].[Price], [Measures].[Fact Order Items Count]} ON COLUMNS,
+ NON EMPTY [Dim Order Date].[Order Date Hierarchy].[Order Year].MEMBERS ON ROWS
+FROM [Olist DW];
+
+-- Drill-down: doanh số theo tháng của năm 2017.
+SELECT {[Measures].[Price]} ON COLUMNS,
+ NON EMPTY [Dim Order Date].[Order Date Hierarchy].[Order Year].&[2017].CHILDREN ON ROWS
+FROM [Olist DW];
+
+-- Pivot: tháng x phân khúc seller.
+SELECT NON EMPTY [Dim Seller].[Seller Segment].[Seller Segment].MEMBERS ON COLUMNS,
+ NON EMPTY [Dim Order Date].[Order Date Hierarchy].[Order Month].MEMBERS ON ROWS
+FROM [Olist DW]
+WHERE ([Measures].[Price]);
