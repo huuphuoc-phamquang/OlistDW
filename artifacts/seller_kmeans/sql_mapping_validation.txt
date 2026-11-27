@@ -1,0 +1,12 @@
+seller_segment                                                                                       sellers
+---------------------------------------------------------------------------------------------------- -----------
+Insufficient orders                                                                                          841
+KMeans C0                                                                                                     55
+KMeans C1                                                                                                    647
+KMeans C2                                                                                                    532
+KMeans C3                                                                                                    240
+KMeans C4                                                                                                    655
+No eligible delivered sales                                                                                  125
+missing_mapping
+---------------
+              0

@@ -1,0 +1,5 @@
+feature_a,feature_b,pearson
+avg_order_value,price_index,0.8814741002025721
+late_delivery_rate,delivery_days_mean,0.5548791752309385
+review_score_mean,low_star_rate,-0.9044105300628086
+category_count,category_hhi,-0.8183833885977281

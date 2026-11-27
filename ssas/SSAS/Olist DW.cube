@@ -291,6 +291,8 @@
         <Attribute dwd:design-time-name="ba40fed6-4090-4ee2-b640-1315ff88896e">
           <AttributeID>Location Id</AttributeID>
         </Attribute>
+              <Attribute><AttributeID>Seller Segment</AttributeID></Attribute>
+              <Attribute><AttributeID>Seller Region</AttributeID></Attribute>
       </Attributes>
     </Dimension>
     <Dimension dwd:design-time-name="a5b3fc81-baa5-42a5-ac30-ae31111c2e49">

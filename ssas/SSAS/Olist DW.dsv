@@ -459,6 +459,12 @@
                     </xs:simpleType>
                   </xs:element>
                   <xs:element name="location_id" msprop:FriendlyName="location_id" msprop:DbColumnName="location_id" msprop:design-time-name="57be78b5-5370-40a9-a5f5-3db306f70cc8" type="xs:int" minOccurs="0" />
+                                  <xs:element name="seller_segment" msprop:FriendlyName="seller_segment" msprop:DbColumnName="seller_segment" minOccurs="0">
+                    <xs:simpleType><xs:restriction base="xs:string"><xs:maxLength value="100" /></xs:restriction></xs:simpleType>
+                  </xs:element>
+                                  <xs:element name="seller_region" msprop:FriendlyName="seller_region" msprop:DbColumnName="seller_region" minOccurs="0">
+                    <xs:simpleType><xs:restriction base="xs:string"><xs:maxLength value="50" /></xs:restriction></xs:simpleType>
+                  </xs:element>
                 </xs:sequence>
               </xs:complexType>
             </xs:element>

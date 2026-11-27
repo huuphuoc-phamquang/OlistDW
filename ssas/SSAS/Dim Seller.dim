@@ -99,6 +99,8 @@
           <AttributeID>Location Id</AttributeID>
           <Name>Location Id</Name>
         </AttributeRelationship>
+        <AttributeRelationship><AttributeID>Seller Segment</AttributeID><Name>Seller Segment</Name></AttributeRelationship>
+        <AttributeRelationship><AttributeID>Seller Region</AttributeID><Name>Seller Region</Name></AttributeRelationship>
       </AttributeRelationships>
       <OrderBy>Key</OrderBy>
       <ddl200:ProcessingState>Unprocessed</ddl200:ProcessingState>
@@ -118,6 +120,20 @@
       </KeyColumns>
       <ddl200:ProcessingState>Unprocessed</ddl200:ProcessingState>
       <ddl300:AttributeHierarchyProcessingState>Unprocessed</ddl300:AttributeHierarchyProcessingState>
+    </Attribute>
+    <Attribute>
+      <ID>Seller Segment</ID><Name>Seller Segment</Name>
+      <KeyColumns><KeyColumn><DataType>WChar</DataType><DataSize>100</DataSize>
+        <Source xsi:type="ColumnBinding"><TableID>dbo_dim_seller</TableID><ColumnID>seller_segment</ColumnID></Source>
+      </KeyColumn></KeyColumns>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Seller Region</ID><Name>Seller Region</Name>
+      <KeyColumns><KeyColumn><DataType>WChar</DataType><DataSize>50</DataSize>
+        <Source xsi:type="ColumnBinding"><TableID>dbo_dim_seller</TableID><ColumnID>seller_region</ColumnID></Source>
+      </KeyColumn></KeyColumns>
+      <OrderBy>Key</OrderBy>
     </Attribute>
   </Attributes>
   <ddl300:ProcessingState>Unprocessed</ddl300:ProcessingState>
