@@ -1,27 +1,52 @@
--- Cube: [Olist DW]   Measure group moi: [Fact Order Payment], [Fact Seller Lead]
--- Fact Order Payment: [Payment Value], [Payment Count]       -- dim: Dim Payment Type, Dim Customer, Dim Location (qua Customer)
--- Fact Seller Lead:   [Lead Count], [Won Leads], [Declared Monthly Revenue] -- dim: Dim Lead Origin, Dim Contact Date, Dim Seller
--- Thanh vien [Unknown]: don thanh toan khong co dong hang (Dim Customer) va lead chua thanh seller co ban hang (Dim Seller).
--- Chay MOI LAN MOT cau (SSMS: boi den tung cau roi F5). Cac cau ngan cach nhau boi dong "-- Qn".
+-- ====================================================================================================
+-- CSDL KHO DU LIEU: E-Commerce Olist Data Warehouse (Brazil)
+-- Cube: [Olist DW]
+-- Cac Measure Group moi:
+--   1. [Fact Order Payment]:
+--      - [Measures].[Payment Value] (Tong gia tri thanh toan)
+--      - [Measures].[Payment Count] (So luong giao dich thanh toan)
+--      - Lien ket cac chieu: [Dim Payment Type], [Dim Customer], [Dim Location] (qua Customer)
+--   2. [Fact Seller Lead]:
+--      - [Measures].[Lead Count] (Tong so lead doi tac tiep can)
+--      - [Measures].[Won Leads] (So lead ky hop dong / chot thanh cong)
+--      - [Measures].[Declared Monthly Revenue] (Doanh thu thang khai bao cua doi tac)
+--      - Lien ket cac chieu: [Dim Lead Origin], [Dim Contact Date], [Dim Seller]
+-- Ghi chu ve thanh vien [Unknown]:
+--   - Don thanh toan chua ghep duoc dong hang (Dim Customer)
+--   - Lead chua tro thanh Seller co phat sinh don hang (Dim Seller)
+-- Huong dan thuc thi: Chay MOI LAN MOT cau (Trong SSMS: boi den tung cau roi nhan F5).
+-- ====================================================================================================
 
--- Q16 [ROLL-UP] Gia tri thanh toan theo hinh thuc thanh toan
+-- ====================================================================================================
+-- PHAN 1: PHAN TICH PHUONG THUC THANH TOAN (PAYMENT ANALYSIS - FACT ORDER PAYMENT)
+-- ====================================================================================================
+
+-- Q16 [ROLL-UP] Gia tri thanh toan va so luot giao dich theo hinh thuc thanh toan
+-- Business Question: "Co cau cac phuong thuc thanh toan tren san Olist nhu the nao: Tong gia tri thanh toan (Payment Value) va so luot giao dich (Payment Count) cua tung loai hinh (Credit Card, Boleto, Voucher, Debit Card) la bao nhieu, duoc sap xep theo thu tu giam dan?"
+-- Y nghia nghiep vu: Giup bo phan Tai chinh nam bat thoi quen thanh toan cua khach hang Brazil (ty le dung the tin dung vs thanh toan tien mat qua ma vach Boleto) de dam phan giam muc phi chiet khau voi cac cong thanh toan (Payment Gateway fees).
 SELECT { [Measures].[Payment Value], [Measures].[Payment Count] } ON COLUMNS,
        ORDER([Dim Payment Type].[Payment Type].[Payment Type].MEMBERS, [Measures].[Payment Value], BDESC) ON ROWS
 FROM [Olist DW]
 
--- Q17 [SLICE] Chi lay thanh toan bang the tin dung (credit_card), top 8 bang
+-- Q17 [SLICE] Chi lay thanh toan bang the tin dung (credit_card) tai top 8 bang lon nhat
+-- Business Question: "Neu chi xet rieng hinh thuc tra qua The tin dung (Credit Card), 8 bang nao tai Brazil co tong gia tri chi tieu qua the cao nhat va so luong giao dich the chiem uu the?"
+-- Y nghia nghiep vu: Nhan dien cac thi truong co do phu the tin dung cao de phoi hop voi cac to chuc tai chinh (Visa, Mastercard, Nubank) tung ra chuong trinh tra gop 0% (Installments) hoac hoan tien (Cashback) nham kich cau mua sam.
 SELECT { [Measures].[Payment Value], [Measures].[Payment Count] } ON COLUMNS,
        TOPCOUNT([Dim Location].[Location Hierarchy].[Geolocation State].MEMBERS, 8, [Measures].[Payment Value]) ON ROWS
 FROM [Olist DW]
 WHERE ( [Dim Payment Type].[Payment Type].&[credit_card] )
 
--- Q18 [PIVOT] Hinh thuc thanh toan dua len cot, top 5 bang tren hang
+-- Q18 [PIVOT] Co cau phuong thuc thanh toan tren cot, top 5 bang tren hang
+-- Business Question: "Bao cao ma tran so sanh: Tai 5 bang co quy mo tieu dung lon nhat Olist, co cau gia tri thanh toan phan bo cu the theo tung phuong thuc (The tin dung, Boleto, Voucher, The ghi no) nhu the nao?"
+-- Y nghia nghiep vu: Danh gia su khac biet ve hanh vi tai chinh theo tung vung dia ly de tuy bien thu tu hien thi cac phuong thuc thanh toan mac dinh uu tien tren trang thanh toan (Checkout Page) nham giam ty le bo quen gio hang.
 SELECT [Dim Payment Type].[Payment Type].[Payment Type].MEMBERS ON COLUMNS,
        TOPCOUNT([Dim Location].[Location Hierarchy].[Geolocation State].MEMBERS, 5, [Measures].[Payment Value]) ON ROWS
 FROM [Olist DW]
 WHERE ( [Measures].[Payment Value] )
 
--- Q19 [DICE] Hai hinh thuc (credit_card, boleto) x ba bang (SP, RJ, MG)
+-- Q19 [DICE] So sanh 2 hinh thuc chu luc (credit_card, boleto) tai 3 bang trong diem (SP, RJ, MG)
+-- Business Question: "So sanh truc dien 'cuoc dua' giua hai kenh thanh toan pho bien nhat Brazil (The tin dung vs Ve thanh toan Boleto Bancario) tai 3 bang tam diem (SP, RJ, MG): Muc chenh lech doanh so thanh toan giua 2 hinh thuc nay o tung bang la bao nhieu?"
+-- Y nghia nghiep vu: Theo doi rui ro treo don do cho thanh toan Boleto (von co ty le huy don do quen thanh toan cao hon the) de thiet lap he thong tin nhan/email nhac no tu dong phu hop theo tung bang.
 SELECT { [Dim Payment Type].[Payment Type].&[credit_card], [Dim Payment Type].[Payment Type].&[boleto] } ON COLUMNS,
        { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
          [Dim Location].[Location Hierarchy].[Geolocation State].&[RJ],
@@ -29,26 +54,39 @@ SELECT { [Dim Payment Type].[Payment Type].&[credit_card], [Dim Payment Type].[P
 FROM [Olist DW]
 WHERE ( [Measures].[Payment Value] )
 
--- Q20 [ROLL-UP] So lead, lead thang va ty le chuyen doi theo kenh tiep thi (origin)
+
+-- ====================================================================================================
+-- PHAN 2: PHAN TICH KENH TIEP THI & DOI TAC BAN HANG (SELLER LEAD CONVERSION - FACT SELLER LEAD)
+-- ====================================================================================================
+
+-- Q20 [ROLL-UP] So lead, lead chot hop dong va ty le chuyen doi theo kenh tiep thi (Marketing Origin)
+-- Business Question: "Hieu qua thu hut nha ban hang (Sellers) theo tung kenh marketing: Kenh tiep thi nao (Organic Search, Paid Search, Social, Direct, v.v.) mang ve nhieu lead nhat, so lead chot hop dong thanh cong (Won Leads) va Ty le chuyen doi (Won Rate %) dat bao nhieu?"
+-- Y nghia nghiep vu: Do luong hieu qua chuyen doi (Conversion ROI) cua tung kenh tiep thi B2B de cat giam chi phi cho cac kenh kem hieu qua va don ngan sach vao cac kenh mang ve doi tac chat luong.
 WITH MEMBER [Measures].[Ty Le Thang] AS IIF([Measures].[Lead Count] = 0, NULL, [Measures].[Won Leads] / [Measures].[Lead Count]), FORMAT_STRING = "Percent"
 SELECT { [Measures].[Lead Count], [Measures].[Won Leads], [Measures].[Ty Le Thang] } ON COLUMNS,
        ORDER([Dim Lead Origin].[Origin].[Origin].MEMBERS, [Measures].[Lead Count], BDESC) ON ROWS
 FROM [Olist DW]
 
--- Q21 [DRILL-DOWN] Tu nam 2017, 2018 khoet xuong tung thang: so lead va lead thang
+-- Q21 [DRILL-DOWN] Tu nam 2017, 2018 khoet xuong tung thang: So lead va so lead chot thanh cong
+-- Business Question: "Xu huong tuyen dung nha ban hang qua thoi gian: Khi khoet sau tu tong the nam 2017 va 2018 xuong chi tiet tung thang, so luong doi tac tiep can va so luong chot hop dong thanh cong bien dong nhu the nao?"
+-- Y nghia nghiep vu: Phat hien tinh chu ky va tinh mua vu trong viec thu hut nha ban (vi du can day manh tuyen truoc cac dot mua sam lon Black Friday / Giang sinh) de giao chi tieu (KPI/Quota) phu hop cho doi ngu Sales B2B.
 SELECT { [Measures].[Lead Count], [Measures].[Won Leads] } ON COLUMNS,
        DRILLDOWNMEMBER({ [Dim Contact Date].[Contact Date Hierarchy].[Contact Year].MEMBERS },
                        { [Dim Contact Date].[Contact Date Hierarchy].[Contact Year].&[2017],
                          [Dim Contact Date].[Contact Date Hierarchy].[Contact Year].&[2018] }) ON ROWS
 FROM [Olist DW]
 
--- Q22 [PIVOT] Kenh tiep thi tren cot, 5 thang cua nam 2018 tren hang, do so lead
+-- Q22 [PIVOT] Kenh tiep thi tren cot, cac thang cua nam 2018 tren hang (Theo doi so lead tiep can)
+-- Business Question: "Bang theo doi tien do phat trien nha ban nam 2018: So luong Lead thu hut tu moi kenh tiep thi bien thien qua tung thang trong nam 2018 nhu the nao?"
+-- Y nghia nghiep vu: Theo doi suc khoe lien tuc cua tung kenh tiep thi B2B, kip thoi phat hien su sut giam bat thuong cua cac kenh quang cao tra phi (Paid Search/Social) theo tung thang de dieu chinh content va gia thau (Bidding).
 SELECT [Dim Lead Origin].[Origin].[Origin].MEMBERS ON COLUMNS,
        [Dim Contact Date].[Contact Date Hierarchy].[Contact Year].&[2018].CHILDREN ON ROWS
 FROM [Olist DW]
 WHERE ( [Measures].[Lead Count] )
 
--- Q23 [SLICE] Doanh thu khai bao hang thang cua lead thang theo kenh tiep thi, chi nam 2018 (subselect)
+-- Q23 [SLICE] Doanh thu khai bao hang thang cua lead chot hop dong theo tung kenh (Rieng nam 2018)
+-- Business Question: "Chat luong quy mo cua cac nha ban hang moi gia nhap san trong nam 2018: Nhung kenh tiep thi nao mang ve cac doi tac 'ca lon' co tong doanh thu khai bao hang thang (Declared Monthly Revenue) lon nhat?"
+-- Y nghia nghiep vu: Giup Olist khong chi quan tam den so luong (Quantity) ma con danh gia dung chat luong (Quality) cua nha ban hang: tap trung nguon luc cham soc (Key Account Management) cho cac doi tac co tiem nang doanh so cao nhat.
 SELECT { [Measures].[Won Leads], [Measures].[Declared Monthly Revenue] } ON COLUMNS,
        NON EMPTY ORDER([Dim Lead Origin].[Origin].[Origin].MEMBERS, [Measures].[Declared Monthly Revenue], BDESC) ON ROWS
 FROM ( SELECT [Dim Contact Date].[Contact Date Hierarchy].[Contact Year].&[2018] ON COLUMNS FROM [Olist DW] )

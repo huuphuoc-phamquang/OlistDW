@@ -1,61 +1,106 @@
--- Cube: [Olist DW]   Measures: [Price], [Freight Value], [Fact Order Items Count]
--- Hierarchy: [Dim Location].[Location Hierarchy] (State > City), [Dim Product].[Product Hierarchy] (Category > Product Id)
--- Chay MOI LAN MOT cau (SSMS: boi den tung cau roi F5). Cac cau ngan cach nhau boi dong "-- Qn".
+-- ====================================================================================================
+-- CSDL KHO DU LIEU: E-Commerce Olist Data Warehouse (Brazil)
+-- Cube: [Olist DW]
+-- Measures: [Price] (Doanh thu hang ban), [Freight Value] (Tien cuoc van chuyen), [Fact Order Items Count] (So luong mat hang)
+-- Hierarchies:
+--   - [Dim Location].[Location Hierarchy]: Geolocation State (Bang) > Geolocation City (Thanh pho)
+--   - [Dim Product].[Product Hierarchy]: Product Category Name (Nhom SP) > Product Id (Ma SP)
+-- Huong dan thuc thi: Chay MOI LAN MOT cau (Trong SSMS: boi den tung cau roi nhan F5).
+-- ====================================================================================================
 
--- Q1 [ROLL-UP] Doanh thu theo bang (cap State)
+-- ====================================================================================================
+-- NHOM 1: CAC THAO TAC ROLL-UP (CUON TONG HOP / DRILL-UP)
+-- ====================================================================================================
+
+-- Q1 [ROLL-UP] Doanh thu, phi van chuyen va san luong theo bang (cap State)
+-- Business Question: "Tong doanh thu ban hang (Price), chi phi van chuyen (Freight Value) va so luong mat hang da ban tai moi bang cua Brazil la bao nhieu? Bang nao dang dan dau ve quy mo giao dich tren san Olist?"
+-- Y nghia nghiep vu: Giup Giam doc Kinh doanh danh gia quy mo dong gop cua tung bang tren toan quoc de phan bo ngan sach marketing va logistics phu hop.
 SELECT { [Measures].[Price], [Measures].[Freight Value], [Measures].[Fact Order Items Count] } ON COLUMNS,
        NON EMPTY [Dim Location].[Location Hierarchy].[Geolocation State].MEMBERS ON ROWS
 FROM [Olist DW]
 
--- Q2 [ROLL-UP] Doanh thu theo nhom san pham (cap Category, tu Product len Category)
+-- Q2 [ROLL-UP] Doanh thu theo nhom san pham (cap Category, cuon tu Product Id len Category)
+-- Business Question: "Nhung nganh hang (Product Category) nao dang mang lai doanh thu cao nhat cho san thuong mai dien tu Olist, duoc sap xep giam dan kem theo tong so luong san pham ban ra?"
+-- Y nghia nghiep vu: Xac dinh cac nganh hang chu luc (Cash Cow / Hero Categories) de uu tien dam phan hop tac voi nha ban hang (sellers) va toi uu chuoi cung ung.
 SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
        NON EMPTY ORDER([Dim Product].[Product Hierarchy].[Product Category Name].MEMBERS, [Measures].[Price], BDESC) ON ROWS
 FROM [Olist DW]
 
--- Q3 [ROLL-UP] Gop tu thanh pho len bang roi len toan quoc bang .PARENT
+-- Q3 [ROLL-UP] Cuon nguoc tu thanh pho len bang roi len cap toan quoc bang ham .PARENT
+-- Business Question: "Thanh pho Campinas dong gop bao nhieu doanh thu so voi tong the toan bang Sao Paulo (SP) va so voi tong quy mo doanh thu toan bo he thong Olist?"
+-- Y nghia nghiep vu: Danh gia ty trong doanh thu cua mot do thi ve tinh quan trong so voi cap bang va toan quoc nham xay dung ke hoach mo rong chi nhanh/hub giao hang.
 SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
        { [Dim Location].[Location Hierarchy].[Geolocation City].&[SP]&[campinas],
          [Dim Location].[Location Hierarchy].[Geolocation City].&[SP]&[campinas].PARENT,
          [Dim Location].[Location Hierarchy].[Geolocation City].&[SP]&[campinas].PARENT.PARENT } ON ROWS
 FROM [Olist DW]
 
--- Q4 [ROLL-UP] Cong don doanh thu cac bang tu lon den nho (tong luy ke bang SUM tren tap da sap xep)
+-- Q4 [ROLL-UP] Cong don doanh thu cac bang tu lon den nho (Phan tich luy ke Pareto)
+-- Business Question: "Theo nguyen ly Pareto 80/20, Top 8 bang co doanh thu lon nhat dong gop doanh thu luy ke nhu the nao vao tong doanh thu toan san?"
+-- Y nghia nghiep vu: Giup lanh dao xac dinh nguong tap trung thi truong trong diem; danh gia muc do phu thuoc doanh thu vao nhom cac bang hang dau.
 WITH SET [S] AS ORDER(NONEMPTY([Dim Location].[Location Hierarchy].[Geolocation State].MEMBERS, [Measures].[Price]), [Measures].[Price], BDESC)
 MEMBER [Measures].[Luy Ke Price] AS SUM(HEAD([S], RANK([Dim Location].[Location Hierarchy].CURRENTMEMBER, [S])), [Measures].[Price])
 SELECT { [Measures].[Price], [Measures].[Luy Ke Price] } ON COLUMNS,
        TOPCOUNT([S], 8) ON ROWS
 FROM [Olist DW]
 
--- Q5 [DRILL-DOWN] Tu bang SP, RJ, MG khoet xuong 3 thanh pho doanh thu cao nhat cua moi bang
+
+-- ====================================================================================================
+-- NHOM 2: CAC THAO TAC DRILL-DOWN (KHOET SAU VAO CHI TIET)
+-- ====================================================================================================
+
+-- Q5 [DRILL-DOWN] Tu 3 bang lon (SP, RJ, MG) khoet xuong 3 thanh pho doanh thu cao nhat cua moi bang
+-- Business Question: "Tai 3 thi truong trong diem nhat Brazil gom Sao Paulo (SP), Rio de Janeiro (RJ) va Minas Gerais (MG), 3 thanh pho nao o moi bang dat doanh so ban hang cao nhat?"
+-- Y nghia nghiep vu: Khoet sau tu cap bang xuong cap thanh pho de xac dinh dung vi tri dia ly can xay dung trung tam chia chon don hang (Sorting/Fulfillment Center).
 SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
        DRILLDOWNLEVELTOP({ [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
                            [Dim Location].[Location Hierarchy].[Geolocation State].&[RJ],
                            [Dim Location].[Location Hierarchy].[Geolocation State].&[MG] }, 3, , [Measures].[Price]) ON ROWS
 FROM [Olist DW]
 
--- Q6 [DRILL-DOWN] Tu nhom cama_mesa_banho khoet xuong 10 san pham doanh thu cao nhat
+-- Q6 [DRILL-DOWN] Tu nganh hang cama_mesa_banho khoet xuong 10 san pham co doanh thu cao nhat
+-- Business Question: "Trong nganh hang trong diem 'Chan ga goi dem & Nha tam' (cama_mesa_banho), 10 ma san pham (Product ID) cu the nao dang mang lai doanh thu cao nhat?"
+-- Y nghia nghiep vu: Giup quan ly nganh hang (Category Manager) kiem soat chi tiet muc do ton kho SKU, dam bao khong bi dut hang (out-of-stock) doi voi cac san pham chu luc.
 SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
        TOPCOUNT([Dim Product].[Product Hierarchy].[Product Category Name].&[cama_mesa_banho].CHILDREN, 10, [Measures].[Price]) ON ROWS
 FROM [Olist DW]
 
--- Q7 [DRILL-DOWN] Top 3 nhom san pham, moi nhom khoet xuong 3 san pham ban chay nhat
+-- Q7 [DRILL-DOWN] Top 3 nhom san pham ban chay nhat, moi nhom khoet xuong 3 san pham dau tau
+-- Business Question: "Doi voi top 3 nganh hang dan dau toan san, 3 san pham cu the nao dong vai tro la 'dau tau keo doanh so' cho tung nganh do?"
+-- Y nghia nghiep vu: Boc tach co cau san pham ben trong cac nganh hang lon nhat de thiet ke cac combo khuyen mai hoac chien dich tiep thi lien ket (affiliate marketing).
 SELECT { [Measures].[Price] } ON COLUMNS,
        DRILLDOWNLEVELTOP(TOPCOUNT([Dim Product].[Product Hierarchy].[Product Category Name].MEMBERS, 3, [Measures].[Price]), 3, , [Measures].[Price]) ON ROWS
 FROM [Olist DW]
 
--- Q8 [SLICE] Cat theo bang SP (WHERE): top 10 nhom san pham ban chay o SP
+
+-- ====================================================================================================
+-- NHOM 3: CAC THAO TAC SLICE (CAT LAT MOT CHIEU DU LIEU)
+-- ====================================================================================================
+
+-- Q8 [SLICE] Cat theo bang Sao Paulo (WHERE): top 10 nhom san pham ban chay nhat o SP
+-- Business Question: "Dac thu tieu dung tai thi truong bang Sao Paulo (SP) nhu the nao: 10 nganh hang nao duoc nguoi dan SP ua chuong va mang ve doanh so cao nhat?"
+-- Y nghia nghiep vu: Ho tro chien luoc ban dia hoa tiep thi (Hyper-local Marketing), thiet ke cac chuong trinh khuyen mai danh rieng cho thi truong lon nhat ca nuoc.
 SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
        TOPCOUNT([Dim Product].[Product Hierarchy].[Product Category Name].MEMBERS, 10, [Measures].[Price]) ON ROWS
 FROM [Olist DW]
 WHERE ( [Dim Location].[Location Hierarchy].[Geolocation State].&[SP] )
 
--- Q9 [SLICE] Cat 2 chieu cung luc: bang SP va nhom beleza_saude (ket qua la mot "lat cat" 1 hang)
+-- Q9 [SLICE] Cat 2 chieu dong thoi: bang SP va nhom beleza_saude (lat cat chi tiet 1 o toa do)
+-- Business Question: "Nganh hang 'Sac dep & Suc khoe' (beleza_saude) tai rieng bang Sao Paulo (SP) dat hieu qua kinh doanh cu the ra sao ve doanh thu, phi van chuyen va san luong?"
+-- Y nghia nghiep vu: Do luong hieu suat KPI cua mot phan khuc kinh doanh cu the (Segment Performance) tai dia ban chien luoc.
 SELECT { [Measures].[Price], [Measures].[Freight Value], [Measures].[Fact Order Items Count] } ON COLUMNS
 FROM [Olist DW]
 WHERE ( [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
         [Dim Product].[Product Hierarchy].[Product Category Name].&[beleza_saude] )
 
--- Q10 [DICE] Khoi con (sub-cube): 3 bang x 3 nhom san pham, nhom bang subselect
+
+-- ====================================================================================================
+-- NHOM 4: CAC THAO TAC DICE (CAT KHOI / SUB-CUBE THEO NHIEU CHIEU)
+-- ====================================================================================================
+
+-- Q10 [DICE] Khoi con (Sub-cube): 3 bang trong diem x 3 nhom san pham pho bien
+-- Business Question: "Ma tran doi chieu: Tong doanh thu va so luong ban cua 3 nganh hang pho bien (beleza_saude, cama_mesa_banho, esporte_lazer) tai 3 bang lon (SP, RJ, MG) la bao nhieu?"
+-- Y nghia nghiep vu: Giup phan tich thi phan cheo va su khac biet ve nhu cau tieu thu giua cac vung dia ly trong tam.
 SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
        NON EMPTY [Dim Location].[Location Hierarchy].[Geolocation State].MEMBERS ON ROWS
 FROM ( SELECT { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
@@ -66,12 +111,21 @@ FROM ( SELECT { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
                        [Dim Product].[Product Hierarchy].[Product Category Name].&[esporte_lazer] } ON COLUMNS
               FROM [Olist DW] ) )
 
--- Q11 [DICE] Loc theo dieu kien: thanh pho cua SP co doanh thu > 100000
+-- Q11 [DICE] Loc theo dieu kien: Cac thanh pho thuoc bang SP co doanh thu vuot nguong 100,000 R$
+-- Business Question: "Nhung do thi nao thuoc bang Sao Paulo (SP) dat chuan 'Thanh pho Doanh so Lon' (tong doanh thu tren 100,000 R$) de trien khai goi dich vu giao hang hoa toc 24h?"
+-- Y nghia nghiep vu: Sang loc danh sach thi truong dat nguong quy mo kinh te de dau tu ha tang dich vu chuyen biet ma khong gay lang phi tai nguyen.
 SELECT { [Measures].[Price], [Measures].[Fact Order Items Count] } ON COLUMNS,
        FILTER([Dim Location].[Location Hierarchy].[Geolocation State].&[SP].CHILDREN, [Measures].[Price] > 100000) ON ROWS
 FROM [Olist DW]
 
--- Q12 [PIVOT] Hang = nhom san pham (top 5), cot = bang (SP, RJ, MG)
+
+-- ====================================================================================================
+-- NHOM 5: CAC THAO TAC PIVOT (XOAY TRUC BAO CAO) & THANH VIEN TINH TOAN
+-- ====================================================================================================
+
+-- Q12 [PIVOT] Goc nhin San pham: Hang = Nhom san pham (Top 5), Cot = Bang (SP, RJ, MG)
+-- Business Question: "Bao cao so sanh theo nganh hang: Top 5 nganh hang lon nhat dang phan bo doanh thu cu the ra sao giua 3 bang SP, RJ va MG?"
+-- Y nghia nghiep vu: Cung cap cho Quan ly San pham (Product Manager) cai nhin ro net ve suc mua cua tung dong hang tai cac thi truong dia ly khac nhau.
 SELECT { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
          [Dim Location].[Location Hierarchy].[Geolocation State].&[RJ],
          [Dim Location].[Location Hierarchy].[Geolocation State].&[MG] } ON COLUMNS,
@@ -79,7 +133,9 @@ SELECT { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
 FROM [Olist DW]
 WHERE ( [Measures].[Price] )
 
--- Q13 [PIVOT] Xoay truc cua Q12: hang = bang, cot = nhom san pham
+-- Q13 [PIVOT] Goc nhin Khu vuc: Xoay truc cua Q12 (Hang = Bang, Cot = Nhom san pham)
+-- Business Question: "Bao cao so sanh theo khu vuc: Dao nguoc goc nhin de Giam doc Chi nhanh tung Bang nam bat co cau dong gop cua 5 nganh hang lon nhat tren dia ban cua minh?"
+-- Y nghia nghiep vu: Thuc hien thao tac xoay truc 90 do giup chuyen doi goc nhin tu quan tri nganh hang sang quan tri vung lanh tho ma khong can thay doi du lieu nguon.
 SELECT TOPCOUNT([Dim Product].[Product Hierarchy].[Product Category Name].MEMBERS, 5, [Measures].[Price]) ON COLUMNS,
        { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
          [Dim Location].[Location Hierarchy].[Geolocation State].&[RJ],
@@ -87,14 +143,18 @@ SELECT TOPCOUNT([Dim Product].[Product Hierarchy].[Product Category Name].MEMBER
 FROM [Olist DW]
 WHERE ( [Measures].[Price] )
 
--- Q14 [PIVOT] Dua do do (Measures) xuong hang, bang len cot
+-- Q14 [PIVOT] Dua do do (Measures) xuong hang, bang dia ly len cot
+-- Business Question: "Bang chi so tai chinh - van hanh tong hop: So sanh dong thoi Doanh thu ban hang, Cuoc van chuyen va So don giua cac bang SP, RJ, MG khi xep cac do do tren truc doc?"
+-- Y nghia nghiep vu: Dinh dang bao cao the diem can bang (Executive Scorecard) phu hop cho Ban Giam doc danh gia tong quan ca ve doanh so lan chi phi hau can.
 SELECT { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
          [Dim Location].[Location Hierarchy].[Geolocation State].&[RJ],
          [Dim Location].[Location Hierarchy].[Geolocation State].&[MG] } ON COLUMNS,
        { [Measures].[Price], [Measures].[Freight Value], [Measures].[Fact Order Items Count] } ON ROWS
 FROM [Olist DW]
 
--- Q15 [PIVOT] Thanh vien tinh toan: gia trung binh moi dong hang, bang x nhom san pham
+-- Q15 [PIVOT] Thanh vien tinh toan (Calculated Member): Gia trung binh moi san pham (Bang x Nhom SP)
+-- Business Question: "Muc chi tieu trung binh cho moi san pham (Average Price = Doanh thu / So luong) tai top 4 nganh hang o cac bang SP, RJ, MG la bao nhieu? Nguoi tieu dung o bang nao san sang chi tien cho san pham cao cap hon?"
+-- Y nghia nghiep vu: Ho tro chien luoc dinh gia san pham (Pricing Strategy) va phan khuc khach hang cao cap (Premium Segments) theo tung vung dia ly.
 WITH MEMBER [Measures].[Avg Price] AS IIF([Measures].[Fact Order Items Count] = 0, NULL, [Measures].[Price] / [Measures].[Fact Order Items Count]), FORMAT_STRING = '#,##0.00'
 SELECT TOPCOUNT([Dim Product].[Product Hierarchy].[Product Category Name].MEMBERS, 4, [Measures].[Price]) ON COLUMNS,
        { [Dim Location].[Location Hierarchy].[Geolocation State].&[SP],
