@@ -53,6 +53,8 @@ Danh sách 9 đặc trưng giữ nguyên như trong `mining/seller_segmentation.
 
 Các cột dùng để mô tả cụm (`seller_city`, `seller_state`) lấy từ `dim_seller` nối `dim_location`.
 
+Danh sách đặc trưng đề xuất thêm nằm trong `docs/de_xuat_dac_trung_seller_segmentation.md`.
+
 Code mining hiện vẫn đọc dữ liệu thô. Bước tiếp theo là sửa `load_sources` để đọc các bảng trên từ `OlistDW` (ví dụ qua `pyodbc`), rồi so kết quả với bản đọc dữ liệu thô.
 
 ## 5. Kiểm chứng
