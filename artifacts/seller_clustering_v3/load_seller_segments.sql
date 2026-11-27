@@ -5,8 +5,9 @@ SET NOCOUNT ON;
 SET XACT_ABORT ON;
 BEGIN TRY
 BEGIN TRANSACTION;
-CREATE TABLE #segments(seller_id nvarchar(255) NOT NULL PRIMARY KEY,
- seller_segment nvarchar(100) NOT NULL, seller_region nvarchar(50) NOT NULL);
+-- COLLATE DATABASE_DEFAULT: bảng tạm theo collation của database đích, không theo tempdb
+CREATE TABLE #segments(seller_id nvarchar(255) COLLATE DATABASE_DEFAULT NOT NULL PRIMARY KEY,
+ seller_segment nvarchar(100) COLLATE DATABASE_DEFAULT NOT NULL, seller_region nvarchar(50) COLLATE DATABASE_DEFAULT NOT NULL);
 INSERT INTO #segments VALUES
 (N'0015a82c2db000af6aaaf3ae2ecb0532',N'C2 Ngưng hoạt động',N'Sudeste'),
 (N'001cca7ae9ae17fb1caed9dfb1094831',N'C0 Chủ lực đa ngành',N'Sudeste'),

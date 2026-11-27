@@ -23,8 +23,9 @@ SET NOCOUNT ON;
 SET XACT_ABORT ON;
 BEGIN TRY
 BEGIN TRANSACTION;
-CREATE TABLE #segments(seller_id nvarchar(255) NOT NULL PRIMARY KEY,
- seller_segment nvarchar(100) NOT NULL, seller_region nvarchar(50) NOT NULL);
+-- COLLATE DATABASE_DEFAULT: bảng tạm theo collation của database đích, không theo tempdb
+CREATE TABLE #segments(seller_id nvarchar(255) COLLATE DATABASE_DEFAULT NOT NULL PRIMARY KEY,
+ seller_segment nvarchar(100) COLLATE DATABASE_DEFAULT NOT NULL, seller_region nvarchar(50) COLLATE DATABASE_DEFAULT NOT NULL);
 """]
 for start in range(0,len(data),500):
     values=[ '('+','.join(literal(row[c]) for c in ['seller_id','seller_segment','seller_region'])+')'
