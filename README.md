@@ -34,11 +34,14 @@ Olist_DW/
 | 1 | Tạo database và bảng | SSMS: chạy `sql/01_create_tables.sql` |
 | 2 | Nạp dữ liệu | Visual Studio: mở `ssis/Olist_SSIS.slnx`, chuột phải `Package.dtsx` → Execute |
 | 3 | Khóa chính và kiểm tra | SSMS: chạy `sql/02_post_load_checks.sql` |
+| 3b | Nạp phân khúc seller vào `dim_seller` | `sqlcmd -S . -E -C -b -d OlistDW -f 65001 -i artifacts/seller_clustering_v3/load_seller_segments.sql` |
 | 4 | Tạo cube | Visual Studio: mở `ssas/Olist_SSAS.slnx` → Deploy |
 | 5 | Truy vấn | SSMS (Analysis Services): chạy từng câu trong `ssas/mdx/01_olist_mdx_queries.mdx` và `03_olist_mdx_payment_lead.mdx` |
 | 6 | Đối chiếu | `sql/03_compare_with_cube.sql` và `ssas/mdx/02_compare_with_sql.mdx` |
 
 Kết quả đúng: `fact_order_items` có 112.650 dòng, tổng `price` 13.591.643,70, `freight_value` 2.251.909,54.
+
+Hướng dẫn chạy lại bằng dòng lệnh, số liệu kiểm tra, lỗi thường gặp và cách khôi phục: [docs/huong_dan_chay_lai.md](docs/huong_dan_chay_lai.md).
 
 ## Đường dẫn và tên server cần chỉnh khi chuyển máy
 
