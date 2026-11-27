@@ -1,0 +1,52 @@
+{
+  "n_sellers": 2129,
+  "features": [
+    "order_count",
+    "recency_days",
+    "tenure_days",
+    "late_delivery_rate",
+    "review_score_mean",
+    "category_count",
+    "avg_ship_distance_km",
+    "hot_score",
+    "delivery_days_mean",
+    "price_index",
+    "freight_per_item",
+    "interstate_rate"
+  ],
+  "kmeans": {
+    "k": 5,
+    "k_by_rule": 4,
+    "n_clusters": 5.0,
+    "noise_share": 0.0,
+    "silhouette": 0.13344374809921306,
+    "davies_bouldin": 1.8778674226793968,
+    "calinski_harabasz": 286.9112338324453,
+    "min_cluster_share": 0.099577266322217
+  },
+  "gmm": {
+    "covariance": "full",
+    "k": 3,
+    "n_clusters": 3.0,
+    "noise_share": 0.0,
+    "silhouette": 0.08399398230108183,
+    "davies_bouldin": 2.5677343630183844,
+    "calinski_harabasz": 196.1247842756391,
+    "min_cluster_share": 0.2062000939408173
+  },
+  "dbscan": {
+    "eps": 2.939288134671058,
+    "min_samples": 24,
+    "n_clusters": 1.0,
+    "noise_share": 0.03240958196336308,
+    "silhouette": NaN,
+    "davies_bouldin": NaN,
+    "calinski_harabasz": NaN,
+    "min_cluster_share": NaN
+  },
+  "pca_explained_variance": [
+    0.24074445174270706,
+    0.1545870337573691
+  ],
+  "kmeans_seed_ari_min": 0.8684132800841435
+}

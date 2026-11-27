@@ -1,0 +1,96 @@
+{
+  "features": [
+    "order_count",
+    "recency_days",
+    "tenure_days",
+    "late_delivery_rate",
+    "review_score_mean",
+    "category_count",
+    "avg_ship_distance_km",
+    "hot_score",
+    "delivery_days_mean",
+    "price_index",
+    "freight_per_item",
+    "interstate_rate"
+  ],
+  "log1p": [
+    "order_count",
+    "recency_days",
+    "delivery_days_mean",
+    "category_count",
+    "avg_ship_distance_km",
+    "price_index",
+    "freight_per_item"
+  ],
+  "dropped_from_v2": [
+    "cancel_rate",
+    "repeat_customer_rate",
+    "avg_order_value"
+  ],
+  "n_sellers": 2129,
+  "missing_filled": {
+    "order_count": 0,
+    "recency_days": 0,
+    "tenure_days": 0,
+    "late_delivery_rate": 0,
+    "review_score_mean": 0,
+    "category_count": 0,
+    "avg_ship_distance_km": 0,
+    "hot_score": 0,
+    "delivery_days_mean": 0,
+    "price_index": 0,
+    "freight_per_item": 0,
+    "interstate_rate": 0
+  },
+  "median": {
+    "order_count": 12.0,
+    "recency_days": 28.0,
+    "tenure_days": 329.0,
+    "late_delivery_rate": 0.0327868852459,
+    "review_score_mean": 4.24489795918,
+    "category_count": 2.0,
+    "avg_ship_distance_km": 564.108104462,
+    "hot_score": 0.0419856129947,
+    "delivery_days_mean": 11.3780968915,
+    "price_index": 0.924152712423,
+    "freight_per_item": 18.4183870968,
+    "interstate_rate": 0.666666666667
+  },
+  "scaler_mean": {
+    "order_count": 2.871122131247411,
+    "recency_days": 3.644360970639203,
+    "tenure_days": 338.9581963363081,
+    "late_delivery_rate": 0.06560039720634192,
+    "review_score_mean": 4.182491372148399,
+    "category_count": 1.1384693728905322,
+    "avg_ship_distance_km": 6.286281455115857,
+    "hot_score": 0.0428740920688907,
+    "delivery_days_mean": 2.506383933548263,
+    "price_index": 0.7635807182076526,
+    "freight_per_item": 3.051356970583638,
+    "interstate_rate": 0.6552722905600831
+  },
+  "scaler_scale": {
+    "order_count": 1.2034065788341695,
+    "recency_days": 1.415882920782191,
+    "tenure_days": 191.19907572167276,
+    "late_delivery_rate": 0.09509202490689357,
+    "review_score_mean": 0.5055524261149054,
+    "category_count": 0.4758508981820508,
+    "avg_ship_distance_km": 0.54465487400483,
+    "hot_score": 0.02533049454218062,
+    "delivery_days_mean": 0.3443974683274495,
+    "price_index": 0.47068765153036396,
+    "freight_per_item": 0.4192726631215818,
+    "interstate_rate": 0.24026440960900297
+  },
+  "random_state": 42,
+  "versions": {
+    "python": "3.14.6",
+    "numpy": "2.5.1",
+    "pandas": "3.0.5",
+    "scikit-learn": "1.9.0",
+    "matplotlib": "3.11.1",
+    "seaborn": "0.13.2"
+  }
+}
