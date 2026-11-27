@@ -456,11 +456,44 @@
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x000A_"
+              DTS:ColumnDelimiter="_x002C_"
               DTS:DataType="6"
               DTS:TextQualified="True"
               DTS:ObjectName="freight_value"
               DTS:DTSID="{EF22DC62-9ABC-4299-ABCB-9595110076D7}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:MaximumWidth="50"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="130"
+              DTS:TextQualified="True"
+              DTS:ObjectName="order_status"
+              DTS:DTSID="{ADF3C796-FA6E-4845-85B0-04CCA900B14F}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="135"
+              DTS:TextQualified="True"
+              DTS:ObjectName="order_purchase_timestamp"
+              DTS:DTSID="{138B0F7D-CC4F-4723-B856-C4796119D566}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="135"
+              DTS:TextQualified="True"
+              DTS:ObjectName="order_delivered_customer_date"
+              DTS:DTSID="{8D735FBB-03C7-496F-8FD7-5FDB6A597FAC}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x000A_"
+              DTS:DataType="135"
+              DTS:TextQualified="True"
+              DTS:ObjectName="order_estimated_delivery_date"
+              DTS:DTSID="{82BFD023-86BF-4BBB-A52A-0ABC52F394FF}"
               DTS:CreationName="" />
           </DTS:FlatFileColumns>
         </DTS:ConnectionManager>
@@ -3121,6 +3154,87 @@
                           name="UseBinaryFormat">false</property>
                       </properties>
                     </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].Columns[order_status]"
+                      dataType="wstr"
+                      length="50"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[order_status]"
+                      lineageId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].Columns[order_status]"
+                      name="order_status"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].Columns[order_purchase_timestamp]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[order_purchase_timestamp]"
+                      lineageId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].Columns[order_purchase_timestamp]"
+                      name="order_purchase_timestamp"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].Columns[order_delivered_customer_date]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[order_delivered_customer_date]"
+                      lineageId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].Columns[order_delivered_customer_date]"
+                      name="order_delivered_customer_date"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].Columns[order_estimated_delivery_date]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[order_estimated_delivery_date]"
+                      lineageId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].Columns[order_estimated_delivery_date]"
+                      name="order_estimated_delivery_date"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                   </outputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -3156,6 +3270,23 @@
                       refId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[freight_value]"
                       dataType="cy"
                       name="freight_value" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[order_status]"
+                      dataType="wstr"
+                      length="50"
+                      name="order_status" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[order_purchase_timestamp]"
+                      dataType="dbTimeStamp"
+                      name="order_purchase_timestamp" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[order_delivered_customer_date]"
+                      dataType="dbTimeStamp"
+                      name="order_delivered_customer_date" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[order_estimated_delivery_date]"
+                      dataType="dbTimeStamp"
+                      name="order_estimated_delivery_date" />
                   </externalMetadataColumns>
                 </output>
                 <output
@@ -3305,6 +3436,31 @@
                       cachedName="freight_value"
                       externalMetadataColumnId="Package\DFT_Load_FACT_ORDER_ITEMS\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[freight_value]"
                       lineageId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].Columns[freight_value]" />
+                    <inputColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[order_status]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="order_status"
+                      externalMetadataColumnId="Package\DFT_Load_FACT_ORDER_ITEMS\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[order_status]"
+                      lineageId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].Columns[order_status]" />
+                    <inputColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[order_purchase_timestamp]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="order_purchase_timestamp"
+                      externalMetadataColumnId="Package\DFT_Load_FACT_ORDER_ITEMS\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[order_purchase_timestamp]"
+                      lineageId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].Columns[order_purchase_timestamp]" />
+                    <inputColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[order_delivered_customer_date]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="order_delivered_customer_date"
+                      externalMetadataColumnId="Package\DFT_Load_FACT_ORDER_ITEMS\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[order_delivered_customer_date]"
+                      lineageId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].Columns[order_delivered_customer_date]" />
+                    <inputColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[order_estimated_delivery_date]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="order_estimated_delivery_date"
+                      externalMetadataColumnId="Package\DFT_Load_FACT_ORDER_ITEMS\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[order_estimated_delivery_date]"
+                      lineageId="Package\DFT_Load_FACT_ORDER_ITEMS\Flat File Source.Outputs[Flat File Source Output].Columns[order_estimated_delivery_date]" />
                   </inputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -3340,6 +3496,23 @@
                       refId="Package\DFT_Load_FACT_ORDER_ITEMS\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[freight_value]"
                       dataType="cy"
                       name="freight_value" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[order_status]"
+                      dataType="wstr"
+                      length="50"
+                      name="order_status" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[order_purchase_timestamp]"
+                      dataType="dbTimeStamp"
+                      name="order_purchase_timestamp" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[order_delivered_customer_date]"
+                      dataType="dbTimeStamp"
+                      name="order_delivered_customer_date" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Load_FACT_ORDER_ITEMS\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[order_estimated_delivery_date]"
+                      dataType="dbTimeStamp"
+                      name="order_estimated_delivery_date" />
                   </externalMetadataColumns>
                 </input>
               </inputs>

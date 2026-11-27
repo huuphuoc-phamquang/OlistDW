@@ -31,6 +31,8 @@ CREATE TABLE dbo.dim_review (
 CREATE TABLE dbo.fact_order_items (
     order_id NVARCHAR(255) NOT NULL, order_item_id INT NOT NULL, customer_id NVARCHAR(255),
     seller_id NVARCHAR(255), product_id NVARCHAR(255), price MONEY, freight_value MONEY,
+    order_status NVARCHAR(50), order_purchase_timestamp DATETIME,
+    order_delivered_customer_date DATETIME, order_estimated_delivery_date DATETIME,
     CONSTRAINT PK_fact_order_items PRIMARY KEY (order_id, order_item_id));
 CREATE TABLE dbo.fact_order_payment (
     order_id NVARCHAR(255) NOT NULL, payment_sequential INT NOT NULL, payment_type NVARCHAR(50),
